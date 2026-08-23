@@ -26,9 +26,8 @@ export function TestimonialsAndTeam() {
   ];
 
   const team = [
-    { name: "Aarav Sharma", title: "Co-Founder & CEO", exp: "Ex-Razorpay Credit & Banking Systems" },
-    { name: "Priya Nair", title: "Head of AI Product Engineering", exp: "Ex-Google DeepMind & Financial RAG Lead" },
-    { name: "Aditya Verma", title: "VP of Rewards Arbitrage", exp: "Credit Card Analyst & Point Arbitrage Contributor" },
+    { name: "Aviral Srivastava", title: "Founder & CEO" },
+    { name: "Ansh Kumar Rai", title: "Head of AI Product Engineering & Co-Founder" },
   ];
 
   return (
@@ -76,12 +75,11 @@ export function TestimonialsAndTeam() {
           <p className="text-xs text-slate-400 mt-1">Combining algorithmic precision, hybrid retrieval RAG, and strict disclosure compliance.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
           {team.map((member, i) => (
-            <div key={i} className="rounded-xl border border-slate-800 bg-slate-950 p-4 text-center">
-              <h4 className="font-bold text-white text-sm">{member.name}</h4>
-              <span className="text-xs font-semibold text-amber-400 block">{member.title}</span>
-              <p className="text-[11px] text-slate-400 mt-1">{member.exp}</p>
+            <div key={i} className="rounded-xl border border-slate-800 bg-slate-950 p-6 text-center shadow-lg hover:border-slate-700 transition-colors">
+              <h4 className="font-bold text-white text-base">{member.name}</h4>
+              <span className="text-xs font-semibold text-amber-400 block mt-1">{member.title}</span>
             </div>
           ))}
         </div>
