@@ -1,4 +1,9 @@
+# https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
 
+# Host
+Host: https://rewardpath.ai
+
+# Sitemaps
 Sitemap: https://rewardpath.ai/sitemap.xml
