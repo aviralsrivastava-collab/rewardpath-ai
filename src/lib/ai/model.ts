@@ -16,6 +16,7 @@ import type {
 } from "../types";
 import { AFFILIATE_DISCLOSURE, LEGAL_DISCLAIMER } from "../types";
 import { SAMPLE_EMI_OFFERS, SAMPLE_BRAND_PARTNERSHIPS, SAMPLE_PURCHASE_PROTECTION } from "../../../scripts/train-ai-model";
+import bundledEmbeddingIndex from "../../../data/embedding_index.json";
 
 export interface VersionedChunk {
   id: string;
@@ -49,19 +50,25 @@ export interface AIModelStatus {
   status: "Ready" | "Unindexed";
 }
 
-let cachedArtifact: EmbeddingIndexArtifact | null = null;
+let cachedArtifact: EmbeddingIndexArtifact | null = 
+  (bundledEmbeddingIndex && (bundledEmbeddingIndex as unknown as EmbeddingIndexArtifact).chunks?.length > 0)
+    ? (bundledEmbeddingIndex as unknown as EmbeddingIndexArtifact)
+    : null;
 
 function loadEmbeddingIndex(): EmbeddingIndexArtifact | null {
   if (cachedArtifact) return cachedArtifact;
-  const artifactPath = path.join(process.cwd(), "data", "embedding_index.json");
-  if (!fs.existsSync(artifactPath)) return null;
+
   try {
-    const raw = fs.readFileSync(artifactPath, "utf-8");
-    cachedArtifact = JSON.parse(raw) as EmbeddingIndexArtifact;
-    return cachedArtifact;
+    const artifactPath = path.join(process.cwd(), "data", "embedding_index.json");
+    if (fs.existsSync(artifactPath)) {
+      const raw = fs.readFileSync(artifactPath, "utf-8");
+      cachedArtifact = JSON.parse(raw) as EmbeddingIndexArtifact;
+      return cachedArtifact;
+    }
   } catch {
-    return null;
+    // Silently fall back if filesystem is restricted
   }
+  return null;
 }
 
 function extractDestinationFromQuery(query: string): string {

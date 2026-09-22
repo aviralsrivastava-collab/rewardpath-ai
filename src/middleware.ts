@@ -30,12 +30,28 @@ export function middleware(request: NextRequest) {
     );
   }
 
-  // 2. STRICT CORS CHECK FOR API ROUTES
+  // 2. CORS CHECK FOR API ROUTES
   if (pathname.startsWith("/api/")) {
     const origin = request.headers.get("origin");
-    const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const host = request.headers.get("host") || request.headers.get("x-forwarded-host");
+    const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL;
 
-    if (origin && origin !== allowedOrigin && !origin.startsWith("http://localhost:")) {
+    // Check if origin is permitted:
+    // - No origin header (same-origin request or server-to-server)
+    // - Configured NEXT_PUBLIC_APP_URL
+    // - Localhost / 127.0.0.1 development
+    // - Matching current host (e.g. rewardpath-ai.vercel.app or custom domain)
+    // - Any Vercel deployment preview / production (*.vercel.app)
+    const isAllowed =
+      !origin ||
+      origin === allowedOrigin ||
+      origin.startsWith("http://localhost:") ||
+      origin.startsWith("http://127.0.0.1:") ||
+      (host && (origin === `https://${host}` || origin === `http://${host}`)) ||
+      origin.endsWith(".vercel.app") ||
+      (process.env.VERCEL_URL && origin.includes(process.env.VERCEL_URL));
+
+    if (!isAllowed) {
       return new NextResponse(
         JSON.stringify({ error: "CORS policy violation: Unauthorized origin" }),
         { status: 403, headers: { "Content-Type": "application/json" } }
@@ -45,7 +61,7 @@ export function middleware(request: NextRequest) {
     // Handle OPTIONS preflight
     if (request.method === "OPTIONS") {
       const response = new NextResponse(null, { status: 204 });
-      response.headers.set("Access-Control-Allow-Origin", origin || allowedOrigin);
+      response.headers.set("Access-Control-Allow-Origin", origin || allowedOrigin || "*");
       response.headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
       response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
       return response;

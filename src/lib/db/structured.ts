@@ -6,32 +6,41 @@ import { SEED_CARDS } from "../data/seed-cards";
 const DATA_DIR = path.join(process.cwd(), "data");
 const JSON_PATH = path.join(DATA_DIR, "cards.json");
 
-let cache: CardStructuredData[] | null = null;
+let cache: CardStructuredData[] = [...SEED_CARDS];
 
 function ensureDataDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+  } catch {
+    // Read-only filesystem in serverless environments (e.g. Vercel)
   }
 }
 
 function loadFromDisk(): CardStructuredData[] {
-  ensureDataDir();
-  if (!fs.existsSync(JSON_PATH)) {
-    return SEED_CARDS;
-  }
-  const raw = fs.readFileSync(JSON_PATH, "utf-8");
   try {
-    const parsed = JSON.parse(raw) as CardStructuredData[];
-    return parsed.length > 0 ? parsed : SEED_CARDS;
+    if (fs.existsSync(JSON_PATH)) {
+      const raw = fs.readFileSync(JSON_PATH, "utf-8");
+      const parsed = JSON.parse(raw) as CardStructuredData[];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    }
   } catch {
-    return SEED_CARDS;
+    // Read-only filesystem or missing file fallback
   }
+  return SEED_CARDS;
 }
 
 function persist(cards: CardStructuredData[]) {
-  ensureDataDir();
-  fs.writeFileSync(JSON_PATH, JSON.stringify(cards, null, 2));
   cache = cards;
+  try {
+    ensureDataDir();
+    fs.writeFileSync(JSON_PATH, JSON.stringify(cards, null, 2));
+  } catch {
+    // Read-only filesystem in serverless environments (e.g. Vercel)
+  }
 }
 
 function getCards(): CardStructuredData[] {
