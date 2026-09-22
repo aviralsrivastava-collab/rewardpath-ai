@@ -23,30 +23,37 @@ export function CookieConsent() {
   return (
     <div
       role="dialog"
-      aria-label="Cookie consent"
-      className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-lg rounded-2xl border border-surface-border bg-white p-5 shadow-card-hover sm:inset-x-6"
+      aria-label="Cookie and privacy consent"
+      className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-lg rounded-2xl border border-slate-800 bg-slate-900/95 p-5 shadow-2xl backdrop-blur-xl sm:inset-x-6 animate-slide-up"
     >
-      <p className="text-sm leading-relaxed text-slate-700">
-        We use cookies and analytics (Google Analytics) to understand how you
-        use RewardPath. No credit card numbers are ever stored.{" "}
-        <a href="/privacy" className="text-brand-600 underline">
-          Privacy Policy
-        </a>
-      </p>
+      <div className="flex items-start gap-3">
+        <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 shrink-0">
+          <span className="text-base">🍪</span>
+        </div>
+        <div className="flex-1">
+          <h4 className="text-xs font-extrabold uppercase tracking-wider text-amber-400">Cookie & Privacy Notice</h4>
+          <p className="mt-1 text-xs leading-relaxed text-slate-300">
+            We use cookies and IP-anonymized analytics (Google Analytics 4) to improve RewardPath AI. Zero 16-digit card numbers, CVVs, or financial credentials are ever requested or stored.{" "}
+            <a href="/privacy" className="text-amber-400 underline font-semibold hover:text-amber-300">
+              Privacy Policy
+            </a>
+          </p>
+        </div>
+      </div>
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
         <button
           type="button"
           onClick={() => handleChoice(true)}
-          className="flex-1 rounded-full bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700"
+          className="flex-1 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2.5 text-xs font-bold text-slate-950 shadow-md hover:from-amber-400 hover:to-amber-500 transition-all cursor-pointer"
         >
-          Accept
+          Accept Analytics Cookies
         </button>
         <button
           type="button"
           onClick={() => handleChoice(false)}
-          className="flex-1 rounded-full border border-surface-border px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          className="flex-1 rounded-xl border border-slate-700 bg-slate-800/80 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-white transition-all cursor-pointer"
         >
-          Decline
+          Decline (Essential Only)
         </button>
       </div>
     </div>

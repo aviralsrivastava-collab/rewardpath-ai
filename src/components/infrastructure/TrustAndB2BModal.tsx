@@ -1,12 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Shield, Code2, Copy, Check } from "lucide-react";
 
 export function TrustAndB2BModal() {
   const [showTrustModal, setShowTrustModal] = useState(false);
   const [showB2BModal, setShowB2BModal] = useState(false);
   const [copiedCode, setCopiedCode] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setShowTrustModal(false);
+        setShowB2BModal(false);
+      }
+    };
+    if (showTrustModal || showB2BModal) {
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [showTrustModal, showB2BModal]);
 
   const embedCodeSnippet = `<script src="https://cdn.rewardpath.ai/v1/widget.js" data-mode="roi-calculator" data-theme="dark"></script>`;
 
@@ -17,19 +30,21 @@ export function TrustAndB2BModal() {
   };
 
   return (
-    <div className="bg-slate-950 py-12 px-4 border-t border-slate-800 text-center text-white">
+    <section id="trust-center" className="bg-slate-950 py-12 px-4 border-t border-slate-800 text-center text-white">
       <div className="mx-auto max-w-4xl flex flex-wrap justify-center items-center gap-4">
         <button
+          type="button"
           onClick={() => setShowTrustModal(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-900 text-xs font-bold text-slate-300 hover:border-emerald-500/40 hover:text-emerald-400 transition-all"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-900 text-xs font-bold text-slate-300 hover:border-emerald-500/40 hover:text-emerald-400 transition-all cursor-pointer"
         >
           <Shield className="h-4 w-4 text-emerald-400" />
           <span>SOC 2 & Trust Infrastructure Center</span>
         </button>
 
         <button
+          type="button"
           onClick={() => setShowB2BModal(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-900 text-xs font-bold text-slate-300 hover:border-amber-500/40 hover:text-amber-400 transition-all"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-800 bg-slate-900 text-xs font-bold text-slate-300 hover:border-amber-500/40 hover:text-amber-400 transition-all cursor-pointer"
         >
           <Code2 className="h-4 w-4 text-amber-400" />
           <span>B2B White-Label Widget Generator</span>
@@ -38,13 +53,13 @@ export function TrustAndB2BModal() {
 
       {/* SOC 2 MODAL */}
       {showTrustModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4" role="dialog" aria-modal="true" aria-labelledby="trust-modal-title">
           <div className="max-w-lg w-full rounded-2xl bg-slate-900 border border-slate-800 p-6 text-left space-y-4 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="font-bold text-white text-base flex items-center gap-2">
+              <h3 id="trust-modal-title" className="font-bold text-white text-base flex items-center gap-2">
                 <Shield className="h-5 w-5 text-emerald-400" /> SOC 2 & Security Compliance Center
               </h3>
-              <button onClick={() => setShowTrustModal(false)} className="text-slate-400 hover:text-white">✕</button>
+              <button onClick={() => setShowTrustModal(false)} aria-label="Close SOC 2 modal" className="text-slate-400 hover:text-white cursor-pointer p-1">✕</button>
             </div>
 
             <div className="space-y-3 text-xs text-slate-300">
@@ -71,13 +86,13 @@ export function TrustAndB2BModal() {
 
       {/* B2B MODAL */}
       {showB2BModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4" role="dialog" aria-modal="true" aria-labelledby="b2b-modal-title">
           <div className="max-w-lg w-full rounded-2xl bg-slate-900 border border-slate-800 p-6 text-left space-y-4 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="font-bold text-white text-base flex items-center gap-2">
+              <h3 id="b2b-modal-title" className="font-bold text-white text-base flex items-center gap-2">
                 <Code2 className="h-5 w-5 text-amber-400" /> White-Label Widget Embed Generator
               </h3>
-              <button onClick={() => setShowB2BModal(false)} className="text-slate-400 hover:text-white">✕</button>
+              <button onClick={() => setShowB2BModal(false)} aria-label="Close widget generator modal" className="text-slate-400 hover:text-white cursor-pointer p-1">✕</button>
             </div>
 
             <p className="text-xs text-slate-300">
@@ -103,6 +118,6 @@ export function TrustAndB2BModal() {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 }

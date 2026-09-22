@@ -60,6 +60,18 @@ export function AIAssistantModal({ isOpen, onClose, initialQuery = "" }: AIAssis
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   async function handleSend(customQuery?: string) {
@@ -87,7 +99,12 @@ export function AIAssistantModal({ isOpen, onClose, initialQuery = "" }: AIAssis
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md animate-fade-in">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="ai-assistant-modal-title"
+    >
       <div className="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 text-slate-100 shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-800 px-6 py-4 bg-slate-950/60">
@@ -97,7 +114,7 @@ export function AIAssistantModal({ isOpen, onClose, initialQuery = "" }: AIAssis
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="font-display text-lg font-bold text-white">RewardPath Nexus AI</h2>
+                <h2 id="ai-assistant-modal-title" className="font-display text-lg font-bold text-white">RewardPath Nexus AI</h2>
                 <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400">
                   <Database className="h-3 w-3" /> Unified Nexus Engine
                 </span>

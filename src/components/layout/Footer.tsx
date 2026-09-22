@@ -9,14 +9,14 @@ const footerLinks = {
     { label: "CPP Breakeven Math", href: "#breakeven" },
     { label: "Approval Odds Checker", href: "#approval-odds" },
     { label: "User Portfolio Dashboard", href: "#dashboard" },
-    { label: "Wallet Optimizer", href: "#wallet-optimizer" },
+    { label: "Wallet Optimizer", href: "#optimizer" },
     { label: "Award Seat Caching", href: "#award-caching" },
   ],
   Legal: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
     { label: "Affiliate Disclosure", href: "/affiliate-disclosure" },
-    { label: "SOC 2 Trust Center", href: "#" },
+    { label: "SOC 2 Trust Center", href: "#trust-center" },
   ],
 };
 

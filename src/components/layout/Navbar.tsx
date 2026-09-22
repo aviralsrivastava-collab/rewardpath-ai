@@ -11,7 +11,9 @@ const navLinks = [
   { href: "#compare", label: "Compare Cards" },
   { href: "#breakeven", label: "CPP Breakeven" },
   { href: "#approval-odds", label: "Approval Odds" },
+  { href: "#optimizer", label: "Wallet Optimizer" },
   { href: "#dashboard", label: "User Portfolio" },
+  { href: "#award-caching", label: "Award Seats" },
   { href: "#faq", label: "FAQ" },
 ];
 
@@ -82,14 +84,16 @@ export function Navbar() {
           type="button"
           className="inline-flex items-center justify-center rounded-lg p-2 text-slate-300 hover:bg-slate-800 lg:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-nav-menu"
+          aria-label="Toggle navigation menu"
         >
           {mobileOpen ? <X className="h-6 w-6 text-white" /> : <Menu className="h-6 w-6 text-white" />}
         </button>
       </nav>
 
       {mobileOpen && (
-        <div className="border-t border-slate-800 bg-slate-950 px-4 py-4 lg:hidden">
+        <div id="mobile-nav-menu" className="border-t border-slate-800 bg-slate-950 px-4 py-4 lg:hidden">
           <ul className="flex flex-col gap-2">
             {navLinks.map((link) => (
               <li key={link.href}>

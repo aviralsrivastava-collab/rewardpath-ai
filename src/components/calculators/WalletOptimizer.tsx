@@ -7,17 +7,17 @@ export function WalletOptimizer() {
   const [selectedCards, setSelectedCards] = useState<string[]>(["hdfc-infinia-metal", "axis-atlas"]);
 
   const allCardsList = [
-    { id: "hdfc-infinia-metal", name: "HDFC Infinia Metal", dining: "5x", travel: "10x", groceries: "3x", gas: "2x" },
-    { id: "hdfc-diners-black-metal", name: "HDFC Diners Black", dining: "5x", travel: "10x", groceries: "3.3x", gas: "2x" },
-    { id: "axis-atlas", name: "Axis Bank Atlas", dining: "2x", travel: "5x", groceries: "2x", gas: "2x" },
-    { id: "axis-magnus-burgundy", name: "Axis Magnus Burgundy", dining: "4.8x", travel: "9.6x", groceries: "4.8x", gas: "2x" },
-    { id: "sbi-cashback", name: "SBI Cashback Card", dining: "5%", travel: "5%", groceries: "5%", gas: "1%" },
-    { id: "hdfc-regalia-gold", name: "HDFC Regalia Gold", dining: "4x", travel: "4x", groceries: "4x", gas: "1x" },
-    { id: "hdfc-millennia", name: "HDFC Millennia", dining: "5%", travel: "5%", groceries: "5%", gas: "1%" },
-    { id: "amex-plat-travel", name: "Amex Plat Travel", dining: "3x", travel: "4x", groceries: "3x", gas: "1x" },
-    { id: "amex-gold-card", name: "Amex Gold Card", dining: "5x", travel: "4x", groceries: "5x", gas: "1x" },
-    { id: "sbi-simplyclick", name: "SBI SimplyCLICK", dining: "2.5x", travel: "2.5x", groceries: "2.5x", gas: "1x" },
-    { id: "icici-amazon-pay", name: "ICICI Amazon Pay", dining: "2%", travel: "5%", groceries: "5%", gas: "1%" },
+    { id: "hdfc-infinia-metal", name: "HDFC Infinia Metal", dining: "5x", travel: "10x", groceries: "3x", gas: "2x", travelScore: 10, diningScore: 5, groceriesScore: 3 },
+    { id: "hdfc-diners-black-metal", name: "HDFC Diners Black", dining: "5x", travel: "10x", groceries: "3.3x", gas: "2x", travelScore: 10, diningScore: 5, groceriesScore: 3.3 },
+    { id: "axis-atlas", name: "Axis Bank Atlas", dining: "2x", travel: "5x", groceries: "2x", gas: "2x", travelScore: 5, diningScore: 2, groceriesScore: 2 },
+    { id: "axis-magnus-burgundy", name: "Axis Magnus Burgundy", dining: "4.8x", travel: "9.6x", groceries: "4.8x", gas: "2x", travelScore: 9.6, diningScore: 4.8, groceriesScore: 4.8 },
+    { id: "sbi-cashback", name: "SBI Cashback Card", dining: "5%", travel: "5%", groceries: "5%", gas: "1%", travelScore: 5, diningScore: 5, groceriesScore: 5 },
+    { id: "hdfc-regalia-gold", name: "HDFC Regalia Gold", dining: "4x", travel: "4x", groceries: "4x", gas: "1x", travelScore: 4, diningScore: 4, groceriesScore: 4 },
+    { id: "hdfc-millennia", name: "HDFC Millennia", dining: "5%", travel: "5%", groceries: "5%", gas: "1%", travelScore: 5, diningScore: 5, groceriesScore: 5 },
+    { id: "amex-plat-travel", name: "Amex Plat Travel", dining: "3x", travel: "4x", groceries: "3x", gas: "1x", travelScore: 4, diningScore: 3, groceriesScore: 3 },
+    { id: "amex-gold-card", name: "Amex Gold Card", dining: "5x", travel: "4x", groceries: "5x", gas: "1x", travelScore: 4, diningScore: 5, groceriesScore: 5 },
+    { id: "sbi-simplyclick", name: "SBI SimplyCLICK", dining: "2.5x", travel: "2.5x", groceries: "2.5x", gas: "1x", travelScore: 2.5, diningScore: 2.5, groceriesScore: 2.5 },
+    { id: "icici-amazon-pay", name: "ICICI Amazon Pay", dining: "2%", travel: "5%", groceries: "5%", gas: "1%", travelScore: 5, diningScore: 2, groceriesScore: 5 },
   ];
 
   const toggleCard = (id: string) => {
@@ -48,6 +48,13 @@ export function WalletOptimizer() {
     },
   ];
 
+  const activeCards = allCardsList.filter((c) => selectedCards.includes(c.id));
+
+  // Determine optimal card for each category dynamically among user's active wallet cards
+  const bestTravelCard = [...activeCards].sort((a, b) => b.travelScore - a.travelScore)[0] ?? activeCards[0];
+  const bestDiningCard = [...activeCards].sort((a, b) => b.diningScore - a.diningScore)[0] ?? activeCards[0];
+  const bestGroceriesCard = [...activeCards].sort((a, b) => b.groceriesScore - a.groceriesScore)[0] ?? activeCards[0];
+
   return (
     <section id="optimizer" className="px-4 py-20 sm:px-6 bg-slate-900 text-white border-t border-slate-800">
       <div className="mx-auto max-w-5xl">
@@ -71,7 +78,9 @@ export function WalletOptimizer() {
             return (
               <button
                 key={c.id}
+                type="button"
                 onClick={() => toggleCard(c.id)}
+                aria-pressed={isSelected}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                   isSelected
                     ? "bg-amber-500 text-slate-950 border-amber-400 shadow-lg"
@@ -95,15 +104,15 @@ export function WalletOptimizer() {
             <div className="space-y-3 text-xs">
               <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
                 <span>✈️ <strong>Travel & Airfare:</strong></span>
-                <span className="text-emerald-400 font-extrabold">Route to {allCardsList.find(c => selectedCards.includes(c.id))?.name ?? "Selected Card"}</span>
+                <span className="text-emerald-400 font-extrabold">Route to {bestTravelCard.name} ({bestTravelCard.travel})</span>
               </div>
               <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
                 <span>🍽️ <strong>Dining & Swiggy/Zomato:</strong></span>
-                <span className="text-emerald-400 font-extrabold">Route to {allCardsList.find(c => selectedCards.includes(c.id))?.name ?? "Selected Card"}</span>
+                <span className="text-emerald-400 font-extrabold">Route to {bestDiningCard.name} ({bestDiningCard.dining})</span>
               </div>
               <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
-                <span>🛒 <strong>Online Groceries & Amazon:</strong></span>
-                <span className="text-emerald-400 font-extrabold">Route to SBI Cashback / HDFC SmartBuy</span>
+                <span>🛒 <strong>Online Groceries & Shopping:</strong></span>
+                <span className="text-emerald-400 font-extrabold">Route to {bestGroceriesCard.name} ({bestGroceriesCard.groceries})</span>
               </div>
               <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
                 <span>⛽ <strong>Fuel & Gas Stations:</strong></span>

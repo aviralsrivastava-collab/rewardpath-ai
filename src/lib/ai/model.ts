@@ -12,9 +12,6 @@ import type {
   RedemptionGuide,
   SpendProfile,
   StructuredTripPlanner,
-  EMIOfferData,
-  BrandPartnershipData,
-  PurchaseProtectionData,
   MultiIntentSubResponse,
 } from "../types";
 import { AFFILIATE_DISCLOSURE, LEGAL_DISCLAIMER } from "../types";

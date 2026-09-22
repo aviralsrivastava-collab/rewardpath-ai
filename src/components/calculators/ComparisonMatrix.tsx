@@ -38,6 +38,18 @@ export function ComparisonMatrix() {
       .finally(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsCompareModalOpen(false);
+      }
+    };
+    if (isCompareModalOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [isCompareModalOpen]);
+
   const issuers = ["All", ...Array.from(new Set(cards.map((c) => c.issuer)))];
 
   const filteredCards = cards.filter((c) => {
@@ -239,17 +251,19 @@ export function ComparisonMatrix() {
 
         {/* STEP 2 & STEP 3: SIDE-BY-SIDE MODAL WITH DYNAMIC WINNER HIGHLIGHTING */}
         {isCompareModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md overflow-y-auto">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="comparison-modal-title">
             <div className="w-full max-w-5xl rounded-3xl border border-slate-800 bg-slate-900 p-6 text-white shadow-2xl max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                 <div>
                   <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 uppercase">
                     3-Step Decision Engine Flow
                   </span>
-                  <h3 className="text-lg font-black text-white mt-1">Side-by-Side Card Comparison Matrix</h3>
+                  <h3 id="comparison-modal-title" className="text-lg font-black text-white mt-1">Side-by-Side Card Comparison Matrix</h3>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setIsCompareModalOpen(false)}
+                  aria-label="Close comparison modal"
                   className="rounded-xl p-2 bg-slate-800 text-slate-400 hover:text-white cursor-pointer"
                 >
                   <X className="h-5 w-5" />

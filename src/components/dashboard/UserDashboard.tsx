@@ -7,11 +7,32 @@ import {
   Award,
   AlertTriangle,
   RefreshCw,
+  Bell,
+  BellRing,
+  CheckCircle2,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
 export function UserDashboard() {
   const [activeTab, setActiveTab] = useState<"balances" | "milestones" | "fees" | "churning">("balances");
+  const [alertedCards, setAlertedCards] = useState<Record<string, boolean>>({
+    "HDFC Infinia Metal Edition": true,
+  });
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const toggleRenewalAlert = (cardName: string) => {
+    setAlertedCards((prev) => {
+      const isCurrentlyActive = !!prev[cardName];
+      const next = { ...prev, [cardName]: !isCurrentlyActive };
+      setToastMessage(
+        !isCurrentlyActive
+          ? `Renewal reminder active for ${cardName}. We'll notify you 30 days before due date.`
+          : `Renewal reminder cancelled for ${cardName}.`
+      );
+      setTimeout(() => setToastMessage(null), 3500);
+      return next;
+    });
+  };
 
   const portfolio = {
     totalValueINR: 285000,
@@ -189,26 +210,55 @@ export function UserDashboard() {
           </div>
         )}
 
+        {/* TOAST FEEDBACK NOTIFICATION */}
+        {toastMessage && (
+          <div className="mb-6 rounded-2xl bg-emerald-950/90 border border-emerald-500/50 p-4 text-xs font-bold text-emerald-300 flex items-center gap-2.5 shadow-xl animate-fade-in" role="status">
+            <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+            <span>{toastMessage}</span>
+          </div>
+        )}
+
         {/* TAB 3: FEES */}
         {activeTab === "fees" && (
-          <div className="space-y-4">
-            {portfolio.upcomingFees.map((fee, idx) => (
-              <div key={idx} className="rounded-2xl border border-slate-800 bg-slate-950 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-bold text-white text-base">{fee.cardName}</h4>
-                    <span className="text-xs font-bold text-red-400 bg-red-950 px-2 py-0.5 rounded border border-red-800">
-                      Fee: {formatCurrency(fee.fee)} + GST
-                    </span>
+          <div className="space-y-4" role="tabpanel" aria-label="Annual Fee and Waiver Calendar">
+            {portfolio.upcomingFees.map((fee, idx) => {
+              const isAlertActive = !!alertedCards[fee.cardName];
+              return (
+                <div key={idx} className="rounded-2xl border border-slate-800 bg-slate-950 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-bold text-white text-base">{fee.cardName}</h4>
+                      <span className="text-xs font-bold text-red-400 bg-red-950 px-2 py-0.5 rounded border border-red-800">
+                        Fee: {formatCurrency(fee.fee)} + GST
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-400 mt-1">Renewal Date: {fee.dueDate}</p>
+                    <p className="text-xs text-amber-300 mt-2 font-medium">💡 Waiver Rule: {fee.recommendation}</p>
                   </div>
-                  <p className="text-xs text-slate-400 mt-1">Renewal Date: {fee.dueDate}</p>
-                  <p className="text-xs text-amber-300 mt-2 font-medium">💡 Waiver Rule: {fee.recommendation}</p>
+                  <button
+                    type="button"
+                    onClick={() => toggleRenewalAlert(fee.cardName)}
+                    className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl border text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                      isAlertActive
+                        ? "bg-emerald-950 text-emerald-300 border-emerald-700 hover:bg-emerald-900"
+                        : "bg-slate-900 border-slate-700 text-white hover:bg-slate-800"
+                    }`}
+                  >
+                    {isAlertActive ? (
+                      <>
+                        <BellRing className="h-4 w-4 text-emerald-400" />
+                        <span>Alert Active (30-day notice)</span>
+                      </>
+                    ) : (
+                      <>
+                        <Bell className="h-4 w-4 text-slate-400" />
+                        <span>Set Renewal Alert</span>
+                      </>
+                    )}
+                  </button>
                 </div>
-                <button className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-bold text-white hover:bg-slate-800 shrink-0">
-                  Set Renewal Alert
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
