@@ -3,7 +3,7 @@ import { ShieldCheck } from "lucide-react";
 
 const footerLinks = {
   Product: [
-    { label: "AI Engines (4 Modes)", href: "#hero-search" },
+    { label: "AI Engines", href: "#hero-search" },
     { label: "ROI Calculator", href: "#calculator" },
     { label: "Card Comparison", href: "#compare" },
     { label: "CPP Breakeven Math", href: "#breakeven" },
@@ -23,9 +23,9 @@ const footerLinks = {
 export function Footer() {
   return (
     <footer className="border-t border-slate-800 bg-slate-950 text-white">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="lg:col-span-2">
+      <div className="mx-auto max-w-6xl px-3.5 py-10 sm:px-6 sm:py-12">
+        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="sm:col-span-2">
             <div className="flex items-center gap-2">
               <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-amber-400 text-slate-950 font-black text-sm">
                 R
@@ -36,7 +36,7 @@ export function Footer() {
               AI-powered credit card and travel rewards advisory platform grounded in cited issuer terms. Net annual value math shown transparently. Educational purpose only — not financial advice.
             </p>
             <div className="mt-3 flex items-center gap-1.5 text-xs text-emerald-400 font-bold">
-              <ShieldCheck className="h-4 w-4" />
+              <ShieldCheck className="h-4 w-4 shrink-0" />
               <span>Soft-pull credit simulation — Zero score impact</span>
             </div>
           </div>
@@ -44,12 +44,12 @@ export function Footer() {
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
               <h3 className="text-xs font-bold uppercase tracking-wider text-amber-400">{title}</h3>
-              <ul className="mt-3 space-y-2">
+              <ul className="mt-3 space-y-1.5 sm:space-y-2">
                 {links.map((link) => (
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-xs text-slate-300 transition-colors hover:text-amber-400"
+                      className="text-xs text-slate-300 transition-colors hover:text-amber-400 inline-block py-0.5"
                     >
                       {link.label}
                     </Link>
@@ -60,7 +60,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-10 border-t border-slate-800 pt-6 text-[11px] leading-relaxed text-slate-400 space-y-2">
+        <div className="mt-8 sm:mt-10 border-t border-slate-800 pt-6 text-[10px] sm:text-[11px] leading-relaxed text-slate-400 space-y-2">
           <p>
             © {new Date().getFullYear()} RewardPath. Information provided is for educational and informational purposes only and does not constitute financial advice. Credit card terms, annual fees, and welcome bonus offers change frequently — verify current details directly on the issuer&apos;s website before applying.
           </p>

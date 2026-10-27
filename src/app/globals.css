@@ -3,17 +3,35 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --font-inter: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 
   body {
-    @apply bg-surface text-slate-900 antialiased;
+    @apply bg-slate-950 text-slate-100 antialiased;
+    overflow-x: hidden;
+    min-width: 320px;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Clean horizontal touch scrollbars for mobile */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

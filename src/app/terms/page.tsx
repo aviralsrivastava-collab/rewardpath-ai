@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-24 sm:px-6 text-white space-y-10">
+    <div className="mx-auto max-w-4xl px-3.5 py-20 sm:px-6 sm:py-24 text-white space-y-8 sm:space-y-10">
       <div className="border-b border-slate-800 pb-6 space-y-3">
         <Link
           href="/"
@@ -18,24 +18,24 @@ export default function TermsPage() {
         >
           <ArrowLeft className="h-4 w-4" /> Back to RewardPath Home
         </Link>
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400">
+        <div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400 mb-2">
             <Scale className="h-3.5 w-3.5" />
             <span>Legal Agreement & User Terms</span>
-          </span>
+          </div>
+          <h1 className="font-display text-2xl sm:text-4xl font-black text-white">Terms of Service</h1>
+          <p className="text-slate-400 text-xs sm:text-sm mt-1">
+            Last revised: August 2026. Please read these terms carefully before accessing or using RewardPath AI.
+          </p>
         </div>
-        <h1 className="font-display text-4xl font-black text-white">Terms of Service</h1>
-        <p className="text-slate-400 text-sm">
-          Last revised: August 2026. Please read these terms carefully before accessing or using RewardPath AI.
-        </p>
       </div>
 
       {/* 1. Educational Content Only */}
       <section className="space-y-4">
-        <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2">
-          <ShieldAlert className="h-5 w-5" /> 1. Strictly Educational & Non-Advisory Nature
+        <h2 className="text-lg sm:text-xl font-bold text-amber-400 flex items-center gap-2">
+          <ShieldAlert className="h-5 w-5 shrink-0" /> 1. Strictly Educational & Non-Advisory Nature
         </h2>
-        <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm space-y-3 text-slate-300 leading-relaxed">
+        <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm space-y-3 text-slate-300 leading-relaxed">
           <p>
             RewardPath AI (&quot;RewardPath&quot;, &quot;we&quot;, &quot;our&quot;) provides educational analysis, mathematical spend modeling, and publicly filed credit card terms for informational purposes only.
           </p>
@@ -47,10 +47,10 @@ export default function TermsPage() {
 
       {/* 2. Issuer Terms & Grounded Accuracy */}
       <section className="space-y-4">
-        <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2">
-          <FileText className="h-5 w-5" /> 2. Issuer Terms, Changes & Devaluations
+        <h2 className="text-lg sm:text-xl font-bold text-amber-400 flex items-center gap-2">
+          <FileText className="h-5 w-5 shrink-0" /> 2. Issuer Terms, Changes & Devaluations
         </h2>
-        <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm space-y-3 text-slate-300 leading-relaxed">
+        <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm space-y-3 text-slate-300 leading-relaxed">
           <p>
             Credit card issuers (including HDFC Bank, Axis Bank, State Bank of India, American Express, ICICI Bank) frequently alter reward structures, devalue point transfer ratios, adjust annual fees, or update merchant category exclusions without prior notice.
           </p>
@@ -62,10 +62,10 @@ export default function TermsPage() {
 
       {/* 3. Soft-Pull Simulation & Credit Score */}
       <section className="space-y-4">
-        <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2">
-          <CheckCircle2 className="h-5 w-5 text-emerald-400" /> 3. Approval Odds & Soft Simulation Guarantee
+        <h2 className="text-lg sm:text-xl font-bold text-amber-400 flex items-center gap-2">
+          <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" /> 3. Approval Odds & Soft Simulation Guarantee
         </h2>
-        <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm space-y-3 text-slate-300 leading-relaxed">
+        <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm space-y-3 text-slate-300 leading-relaxed">
           <p>
             The Approval Odds Checker and CIBIL Simulator utilize algorithmic heuristic estimations based on published underwriting criteria.
           </p>
@@ -77,10 +77,10 @@ export default function TermsPage() {
 
       {/* 4. Limitation of Liability */}
       <section className="space-y-4">
-        <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2">
-          <Scale className="h-5 w-5" /> 4. Limitation of Liability
+        <h2 className="text-lg sm:text-xl font-bold text-amber-400 flex items-center gap-2">
+          <Scale className="h-5 w-5 shrink-0" /> 4. Limitation of Liability
         </h2>
-        <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm space-y-2 text-slate-300 leading-relaxed">
+        <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs sm:text-sm space-y-2 text-slate-300 leading-relaxed">
           <p>
             To the fullest extent permitted by applicable law, RewardPath and its developers shall not be liable for any direct, indirect, incidental, or consequential damages resulting from credit card application decisions, credit score shifts, point expiry, airline award space unavailability, or bank program changes.
           </p>

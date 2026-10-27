@@ -40,14 +40,14 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="bg-slate-950 px-4 py-20 sm:px-6 border-t border-slate-800 text-white">
+    <section id="faq" className="bg-slate-950 px-3.5 py-16 sm:px-6 sm:py-20 border-t border-slate-800 text-white">
       <div className="mx-auto max-w-3xl">
-        <div className="text-center mb-10">
+        <div className="text-center mb-8 sm:mb-10">
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400 mb-2">
             <HelpCircle className="h-3.5 w-3.5" />
             <span>Transparency & Disclosure Standards</span>
           </div>
-          <h2 className="font-display text-3xl font-black text-white sm:text-4xl">
+          <h2 className="font-display text-2xl sm:text-4xl font-black text-white">
             Frequently Asked Questions
           </h2>
         </div>
@@ -61,20 +61,20 @@ export function FAQ() {
               <button
                 type="button"
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="flex w-full items-center justify-between px-6 py-4 text-left font-bold text-white hover:text-amber-400 transition-colors"
+                className="flex w-full items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 text-left font-bold text-white hover:text-amber-400 transition-colors cursor-pointer"
                 aria-expanded={openIndex === i}
               >
-                <span className="pr-4 text-sm sm:text-base">
+                <span className="pr-3 text-xs sm:text-sm md:text-base leading-snug">
                   {faq.question}
                 </span>
                 <ChevronDown
-                  className={`h-5 w-5 shrink-0 text-amber-400 transition-transform duration-200 ${
+                  className={`h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-amber-400 transition-transform duration-200 ${
                     openIndex === i ? "rotate-180" : ""
                   }`}
                 />
               </button>
               {openIndex === i && (
-                <div className="border-t border-slate-800/80 px-6 py-4 bg-slate-950">
+                <div className="border-t border-slate-800/80 px-4 sm:px-6 py-3.5 sm:py-4 bg-slate-950">
                   <p className="text-xs sm:text-sm leading-relaxed text-slate-300">
                     {faq.answer}
                   </p>

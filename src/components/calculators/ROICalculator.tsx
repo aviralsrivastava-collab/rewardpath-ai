@@ -9,10 +9,10 @@ import { trackEvent } from "@/lib/analytics";
 
 const SPEND_FIELDS: { key: keyof SpendProfile; label: string; max: number; step: number }[] = [
   { key: "dining", label: "Dining & Food Delivery (Swiggy/Zomato)", max: 100000, step: 2500 },
-  { key: "groceries", label: "Supermarkets & Online Groceries (Blinkit/Zepto)", max: 150000, step: 2500 },
+  { key: "groceries", label: "Groceries & Supermarkets (Blinkit/Zepto)", max: 150000, step: 2500 },
   { key: "travel", label: "Airfare, Hotels & Cabs (Uber/MakeMyTrip)", max: 200000, step: 5000 },
   { key: "gas", label: "Fuel & EV Charging", max: 50000, step: 1000 },
-  { key: "other", label: "Everyday Purchases & Shopping (Amazon/Flipkart)", max: 300000, step: 5000 },
+  { key: "other", label: "Everyday Shopping (Amazon/Flipkart)", max: 300000, step: 5000 },
 ];
 
 const PRESET_PROFILES: { label: string; profile: SpendProfile }[] = [
@@ -64,45 +64,45 @@ export function ROICalculator() {
   };
 
   return (
-    <section id="calculator" className="bg-slate-950 px-4 py-20 sm:px-6 border-t border-slate-800 text-white">
+    <section id="calculator" className="bg-slate-950 px-3.5 py-16 sm:px-6 sm:py-20 border-t border-slate-800 text-white">
       <div className="mx-auto max-w-5xl">
-        <div className="text-center mb-10">
+        <div className="text-center mb-8 sm:mb-10">
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400 mb-2">
             <Calculator className="h-3.5 w-3.5" />
             <span>Spend-Based Math Engine (India)</span>
           </div>
-          <h2 className="font-display text-3xl font-black text-white sm:text-4xl">
+          <h2 className="font-display text-2xl font-black text-white sm:text-4xl">
             Net Annual Value (NAV) Calculator
           </h2>
-          <p className="mt-2 text-sm text-slate-300 max-w-2xl mx-auto">
+          <p className="mt-2 text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
             Net Annual Value = Annual Rewards Value − Annual Fee. Click any card row below to expand category breakdown.
           </p>
         </div>
 
-        {/* Quick Profile Presets */}
-        <div className="mb-8 flex flex-wrap justify-center gap-2">
+        {/* Quick Profile Presets with smooth touch scroll */}
+        <div className="mb-6 sm:mb-8 flex items-center gap-2 overflow-x-auto no-scrollbar sm:flex-wrap sm:justify-center py-1">
           {PRESET_PROFILES.map((p) => (
             <button
               key={p.label}
               onClick={() => setSpend(p.profile)}
-              className="px-3.5 py-1.5 rounded-full border border-slate-800 bg-slate-900 text-xs font-bold text-slate-300 hover:border-amber-500 hover:text-amber-400 transition-all cursor-pointer"
+              className="px-3.5 py-1.5 rounded-full border border-slate-800 bg-slate-900 text-xs font-bold text-slate-300 hover:border-amber-500 hover:text-amber-400 transition-all cursor-pointer shrink-0 active:scale-98"
             >
               ⚡ {p.label}
             </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
           {/* Sliders / Inputs */}
-          <div className="lg:col-span-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-6 shadow-xl space-y-4">
+          <div className="lg:col-span-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-4 sm:p-6 shadow-xl space-y-4">
             <h3 className="text-xs font-extrabold uppercase tracking-wider text-amber-400 mb-2">
               Step 1: Enter Monthly Spend (₹/mo)
             </h3>
             {SPEND_FIELDS.map(({ key, label, max, step }) => (
-              <div key={key} className="space-y-1">
-                <div className="flex justify-between text-xs font-bold">
+              <div key={key} className="space-y-1.5">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-xs font-bold">
                   <span className="text-slate-300">{label}</span>
-                  <span className="text-amber-400 font-extrabold">{formatCurrency(spend[key])}/mo</span>
+                  <span className="text-amber-400 font-extrabold whitespace-nowrap">{formatCurrency(spend[key])}/mo</span>
                 </div>
                 <input
                   type="range"
@@ -116,7 +116,8 @@ export function ROICalculator() {
                       [key]: Number(e.target.value) || 0,
                     }))
                   }
-                  className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                  className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                  aria-label={label}
                 />
               </div>
             ))}
@@ -125,7 +126,7 @@ export function ROICalculator() {
           {/* Results Column */}
           <div className="lg:col-span-6 space-y-3">
             <h3 className="text-xs font-extrabold uppercase tracking-wider text-amber-400 mb-2 flex items-center justify-between">
-              <span>Ranked Card Net Annual Value (Click to expand)</span>
+              <span>Ranked Net Annual Value</span>
               {loading && <Loader2 className="h-3.5 w-3.5 animate-spin text-amber-400" />}
             </h3>
 
@@ -146,27 +147,27 @@ export function ROICalculator() {
                         toggleExpand(r.cardId);
                       }
                     }}
-                    className="cursor-pointer rounded-xl border border-slate-800 bg-slate-900/90 p-4 shadow-xl transition-all hover:border-amber-500/40 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+                    className="cursor-pointer rounded-xl border border-slate-800 bg-slate-900/90 p-3.5 sm:p-4 shadow-xl transition-all hover:border-amber-500/40 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/20 text-xs font-black text-amber-400 border border-amber-500/30">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500/20 text-xs font-black text-amber-400 border border-amber-500/30 shrink-0">
                           #{i + 1}
                         </span>
-                        <div>
-                          <p className="font-bold text-white text-sm flex items-center gap-1.5">
-                            {r.cardName}
-                            {isExpanded ? <ChevronUp className="h-4 w-4 text-amber-400" /> : <ChevronDown className="h-4 w-4 text-slate-500" />}
+                        <div className="min-w-0">
+                          <p className="font-bold text-white text-xs sm:text-sm flex items-center gap-1.5 truncate">
+                            <span className="truncate">{r.cardName}</span>
+                            {isExpanded ? <ChevronUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-400 shrink-0" /> : <ChevronDown className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-500 shrink-0" />}
                           </p>
-                          <p className="text-xs text-slate-400">
+                          <p className="text-[11px] text-slate-400 truncate">
                             Rewards {formatCurrency(r.annualRewards)} − Fee {formatCurrency(r.annualFee)}
                           </p>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <span className="text-[10px] uppercase font-bold text-slate-400">NAV</span>
+                      <div className="text-right shrink-0">
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">NAV</span>
                         <p
-                          className={`text-lg font-black ${
+                          className={`text-base sm:text-lg font-black ${
                             r.netAnnualValue >= 0 ? "text-emerald-400" : "text-red-400"
                           }`}
                         >
@@ -177,9 +178,9 @@ export function ROICalculator() {
 
                     {/* Expandable Breakdown */}
                     {isExpanded && r.breakdown && (
-                      <div className="mt-4 pt-3 border-t border-slate-800 space-y-2 text-xs text-slate-300 animate-fade-in">
+                      <div className="mt-3 pt-3 border-t border-slate-800 space-y-2 text-xs text-slate-300 animate-fade-in">
                         <span className="text-[10px] uppercase font-bold text-amber-400 block">Category Rewards Breakdown</span>
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 xs:grid-cols-2 gap-2">
                           {r.breakdown.map((b) => (
                             <div key={b.category} className="p-2 rounded bg-slate-950 border border-slate-800">
                               <span className="capitalize font-semibold text-white">{b.category}: </span>

@@ -44,13 +44,13 @@ export function ApprovalOddsChecker() {
     : "Conditional / Income Verification Needed";
 
   return (
-    <section id="approval-odds" className="py-16 px-4 sm:px-6 bg-slate-950 text-white border-t border-slate-800">
+    <section id="approval-odds" className="py-16 px-3.5 sm:px-6 sm:py-20 bg-slate-950 text-white border-t border-slate-800">
       <div className="mx-auto max-w-5xl">
-        {/* Trust Banner */}
-        <div className="mb-8 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-emerald-950/80 border border-emerald-500/40 p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 shrink-0">
-              <ShieldCheck className="h-6 w-6" />
+        {/* Trust Banner: Responsive for mobile and desktop */}
+        <div className="mb-8 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-slate-900 to-emerald-950/80 border border-emerald-500/40 p-4 sm:p-5 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 shrink-0 mt-0.5 sm:mt-0">
+              <ShieldCheck className="h-5 w-5 sm:h-6 sm:w-6" />
             </div>
             <div>
               <span className="inline-block px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 mb-0.5">
@@ -59,34 +59,34 @@ export function ApprovalOddsChecker() {
               <h3 className="text-sm sm:text-base font-extrabold text-white">
                 Zero Hard Inquiry Impact on Your Official CIBIL Score
               </h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
                 Informational score check using soft-pull underwriting modeling. We never store PAN card numbers or sensitive banking credentials.
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-1 text-xs font-bold text-emerald-400 bg-emerald-950 px-3 py-1.5 rounded-xl border border-emerald-800 shrink-0">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 bg-emerald-950 px-3 py-1.5 rounded-xl border border-emerald-800 shrink-0 self-start sm:self-auto">
             <Lock className="h-3.5 w-3.5" /> RBI Compliant Tokenization
           </div>
         </div>
 
-        <div className="text-center mb-8">
-          <h2 className="font-display text-3xl sm:text-4xl font-black text-white">
+        <div className="text-center mb-8 sm:mb-10">
+          <h2 className="font-display text-2xl sm:text-4xl font-black text-white">
             CIBIL Score & Approval Odds Simulator
           </h2>
-          <p className="mt-2 text-sm text-slate-300 max-w-xl mx-auto">
+          <p className="mt-2 text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
             Test Indian card approval odds against bank underwriting criteria before submitting an application.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
           {/* Controls */}
-          <div className="lg:col-span-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-6 shadow-xl space-y-5">
+          <div className="lg:col-span-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-4 sm:p-6 shadow-xl space-y-4 sm:space-y-5">
             <div>
               <label className="text-xs font-bold text-slate-300 block mb-2">Target Indian Credit Card</label>
               <select
                 value={selectedCard}
                 onChange={(e) => setSelectedCard(e.target.value)}
-                className="w-full rounded-xl bg-slate-950 border border-slate-700 px-4 py-3 text-sm text-white font-medium focus:border-amber-500 focus:outline-none"
+                className="w-full rounded-xl bg-slate-950 border border-slate-700 px-3.5 sm:px-4 py-3 text-xs sm:text-sm text-white font-medium focus:border-amber-500 focus:outline-none"
               >
                 {cardsList.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -107,11 +107,12 @@ export function ApprovalOddsChecker() {
                 max={900}
                 value={cibilScore}
                 onChange={(e) => setCibilScore(Number(e.target.value))}
-                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                aria-label="CIBIL Score"
               />
               <div className="flex justify-between text-[10px] text-slate-500 mt-1">
                 <span>600 (Fair)</span>
-                <span>750 (Good Benchmark)</span>
+                <span>750 (Good)</span>
                 <span>900 (Exceptional)</span>
               </div>
             </div>
@@ -128,7 +129,8 @@ export function ApprovalOddsChecker() {
                 step={100000}
                 value={annualIncomeINR}
                 onChange={(e) => setAnnualIncomeINR(Number(e.target.value))}
-                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+                aria-label="Gross Annual Income"
               />
               <div className="flex justify-between text-[10px] text-slate-500 mt-1">
                 <span>₹3 Lakhs</span>
@@ -150,21 +152,22 @@ export function ApprovalOddsChecker() {
                 max={10}
                 value={inquiries6Mo}
                 onChange={(e) => setInquiries6Mo(Number(e.target.value))}
-                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                aria-label="Hard CIBIL Inquiries in past 6 months"
               />
             </div>
           </div>
 
           {/* Odds Outcome Card */}
-          <div className="lg:col-span-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-6 shadow-xl space-y-6">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase text-slate-400">Selected Card</span>
-              <h4 className="font-bold text-white text-base">{currentCard.name}</h4>
+          <div className="lg:col-span-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-4 sm:p-6 shadow-xl space-y-5 sm:space-y-6">
+            <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-1 border-b border-slate-800 pb-3">
+              <span className="text-[11px] sm:text-xs font-bold uppercase text-slate-400">Target Card</span>
+              <h4 className="font-bold text-white text-sm sm:text-base">{currentCard.name}</h4>
             </div>
 
             {/* Odds Progress Bar */}
             <div className="space-y-2">
-              <div className="flex justify-between text-xs font-bold">
+              <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-1 text-xs font-bold">
                 <span className="text-slate-300">{oddsRating}</span>
                 <span className="text-amber-400 font-black">{oddsPercent}% Estimated Probability</span>
               </div>
@@ -190,14 +193,14 @@ export function ApprovalOddsChecker() {
                 {cibilScore >= currentCard.minScore ? (
                   <>
                     <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
-                    <p className="text-slate-300">
+                    <p className="text-slate-300 leading-relaxed">
                       Your CIBIL score of <strong>{cibilScore}</strong> meets bank underwriting benchmarks (minimum {currentCard.minScore}).
                     </p>
                   </>
                 ) : (
                   <>
                     <AlertCircle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
-                    <p className="text-amber-200">
+                    <p className="text-amber-200 leading-relaxed">
                       Your CIBIL score of <strong>{cibilScore}</strong> is below the target card benchmark of <strong>{currentCard.minScore}</strong> for instant approval.
                     </p>
                   </>
@@ -207,7 +210,7 @@ export function ApprovalOddsChecker() {
               {annualIncomeINR < currentCard.minIncomeINR && (
                 <div className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-950/40 border border-amber-800">
                   <AlertCircle className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
-                  <p className="text-amber-200">
+                  <p className="text-amber-200 leading-relaxed">
                     <strong>Income Criterion Notice:</strong> {currentCard.name} usually requires an annual salary/ITR of at least {formatCurrency(currentCard.minIncomeINR)}. Existing salary account relationships may bypass this threshold.
                   </p>
                 </div>
@@ -215,7 +218,7 @@ export function ApprovalOddsChecker() {
 
               <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-950 border border-slate-800">
                 <Info className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
-                <p className="text-slate-300">
+                <p className="text-slate-300 leading-relaxed">
                   Bank Rule Note: {currentCard.cooloff}.
                 </p>
               </div>

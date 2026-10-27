@@ -85,39 +85,39 @@ export function UserDashboard() {
   };
 
   return (
-    <section id="dashboard" className="py-16 px-4 sm:px-6 bg-slate-900 text-white border-t border-slate-800">
+    <section id="dashboard" className="py-16 px-3.5 sm:px-6 sm:py-20 bg-slate-900 text-white border-t border-slate-800">
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400 mb-2">
               <Wallet className="h-3.5 w-3.5" />
               <span>Phase 2 — Portfolio & Retention Hub (India)</span>
             </div>
-            <h2 className="font-display text-3xl font-black text-white">
+            <h2 className="font-display text-2xl sm:text-3xl font-black text-white">
               Indian Rewards Portfolio & Milestone Tracker
             </h2>
           </div>
 
-          <div className="flex items-center gap-3 bg-slate-950 p-3 rounded-2xl border border-slate-800">
+          <div className="flex items-center justify-around w-full sm:w-auto gap-3 bg-slate-950 p-3 rounded-2xl border border-slate-800 shrink-0">
             <div className="text-right">
               <span className="text-[10px] text-slate-400 font-bold uppercase">Estimated Value</span>
-              <p className="text-xl font-black text-emerald-400">{formatCurrency(portfolio.totalValueINR)}</p>
+              <p className="text-lg sm:text-xl font-black text-emerald-400">{formatCurrency(portfolio.totalValueINR)}</p>
             </div>
             <div className="h-8 w-px bg-slate-800" />
             <div>
               <span className="text-[10px] text-slate-400 font-bold uppercase">Total Points</span>
-              <p className="text-xl font-black text-amber-400">{portfolio.totalPoints.toLocaleString()} pts</p>
+              <p className="text-lg sm:text-xl font-black text-amber-400">{portfolio.totalPoints.toLocaleString()} pts</p>
             </div>
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="flex flex-wrap gap-2 border-b border-slate-800 pb-3 mb-6">
+        {/* Tab Navigation with smooth mobile horizontal scroll */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-slate-800 pb-2 sm:pb-3 mb-6">
           {[
-            { id: "balances", label: "Points Balances & Expiry", icon: Wallet },
-            { id: "milestones", label: "Annual Spend Milestones", icon: Award },
-            { id: "fees", label: "Annual Fee & Waiver Calendar", icon: Calendar },
-            { id: "churning", label: "Indian Bank Rules (HDFC/Axis)", icon: RefreshCw },
+            { id: "balances", label: "Points Balances", icon: Wallet },
+            { id: "milestones", label: "Spend Milestones", icon: Award },
+            { id: "fees", label: "Fee & Waiver Calendar", icon: Calendar },
+            { id: "churning", label: "Bank Rules (HDFC/Axis)", icon: RefreshCw },
           ].map((tab) => {
             const Icon = tab.icon;
             const active = activeTab === tab.id;
@@ -125,13 +125,13 @@ export function UserDashboard() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
+                className={`flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 cursor-pointer ${
                   active
                     ? "bg-amber-500 text-slate-950 shadow-md"
                     : "bg-slate-950 text-slate-300 hover:bg-slate-800"
                 }`}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 <span>{tab.label}</span>
               </button>
             );
@@ -145,25 +145,25 @@ export function UserDashboard() {
               {portfolio.balances.map((b, i) => (
                 <div
                   key={i}
-                  className={`rounded-2xl border p-5 bg-slate-950/80 ${
+                  className={`rounded-2xl border p-4 sm:p-5 bg-slate-950/80 ${
                     b.warning ? "border-amber-500/50" : "border-slate-800"
                   }`}
                 >
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start gap-2">
                     <div>
-                      <h4 className="font-bold text-white text-base">{b.program}</h4>
-                      <p className="text-2xl font-black text-amber-400 mt-1">{b.points.toLocaleString()} pts</p>
+                      <h4 className="font-bold text-white text-sm sm:text-base">{b.program}</h4>
+                      <p className="text-xl sm:text-2xl font-black text-amber-400 mt-1">{b.points.toLocaleString()} pts</p>
                     </div>
-                    <span className="text-xs font-bold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded-lg border border-emerald-800">
+                    <span className="text-xs font-bold text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded-lg border border-emerald-800 shrink-0">
                       ≈ {formatCurrency(b.valINR)}
                     </span>
                   </div>
 
-                  <div className="mt-4 flex items-center justify-between text-xs border-t border-slate-800/80 pt-3">
+                  <div className="mt-4 flex flex-col xs:flex-row xs:items-center justify-between text-xs border-t border-slate-800/80 pt-3 gap-1">
                     <span className="text-slate-400">Expiration Status:</span>
                     <span className={b.warning ? "text-amber-400 font-bold flex items-center gap-1" : "text-slate-300"}>
-                      {b.warning && <AlertTriangle className="h-3.5 w-3.5" />}
-                      {b.expiry}
+                      {b.warning && <AlertTriangle className="h-3.5 w-3.5 shrink-0" />}
+                      <span>{b.expiry}</span>
                     </span>
                   </div>
                 </div>
@@ -178,13 +178,13 @@ export function UserDashboard() {
             {portfolio.milestones.map((m) => {
               const pct = Math.min(100, Math.round((m.currentSpend / m.spendGoal) * 100));
               return (
-                <div key={m.id} className="rounded-2xl border border-slate-800 bg-slate-950 p-5 space-y-3">
+                <div key={m.id} className="rounded-2xl border border-slate-800 bg-slate-950 p-4 sm:p-5 space-y-3">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                     <div>
                       <span className="text-[10px] font-extrabold uppercase text-amber-400">Annual Milestone Progress</span>
-                      <h4 className="font-bold text-white text-lg">{m.cardName}</h4>
+                      <h4 className="font-bold text-white text-base sm:text-lg">{m.cardName}</h4>
                     </div>
-                    <div className="text-right">
+                    <div className="text-left sm:text-right">
                       <span className="text-xs font-black text-amber-400">+{m.bonusPoints.toLocaleString()} Reward Bonus</span>
                       <p className="text-xs text-slate-400">{m.completed ? "Milestone Reached!" : `${m.daysRemaining} days remaining`}</p>
                     </div>
@@ -212,7 +212,7 @@ export function UserDashboard() {
 
         {/* TOAST FEEDBACK NOTIFICATION */}
         {toastMessage && (
-          <div className="mb-6 rounded-2xl bg-emerald-950/90 border border-emerald-500/50 p-4 text-xs font-bold text-emerald-300 flex items-center gap-2.5 shadow-xl animate-fade-in" role="status">
+          <div className="mb-6 rounded-2xl bg-emerald-950/90 border border-emerald-500/50 p-3 sm:p-4 text-xs font-bold text-emerald-300 flex items-center gap-2.5 shadow-xl animate-fade-in" role="status">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
             <span>{toastMessage}</span>
           </div>
@@ -224,21 +224,21 @@ export function UserDashboard() {
             {portfolio.upcomingFees.map((fee, idx) => {
               const isAlertActive = !!alertedCards[fee.cardName];
               return (
-                <div key={idx} className="rounded-2xl border border-slate-800 bg-slate-950 p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div key={idx} className="rounded-2xl border border-slate-800 bg-slate-950 p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div>
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-bold text-white text-base">{fee.cardName}</h4>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h4 className="font-bold text-white text-sm sm:text-base">{fee.cardName}</h4>
                       <span className="text-xs font-bold text-red-400 bg-red-950 px-2 py-0.5 rounded border border-red-800">
                         Fee: {formatCurrency(fee.fee)} + GST
                       </span>
                     </div>
                     <p className="text-xs text-slate-400 mt-1">Renewal Date: {fee.dueDate}</p>
-                    <p className="text-xs text-amber-300 mt-2 font-medium">💡 Waiver Rule: {fee.recommendation}</p>
+                    <p className="text-xs text-amber-300 mt-1.5 font-medium">💡 Waiver Rule: {fee.recommendation}</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => toggleRenewalAlert(fee.cardName)}
-                    className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl border text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                    className={`flex items-center justify-center gap-1.5 w-full sm:w-auto px-4 py-2.5 rounded-xl border text-xs font-bold transition-all shrink-0 cursor-pointer ${
                       isAlertActive
                         ? "bg-emerald-950 text-emerald-300 border-emerald-700 hover:bg-emerald-900"
                         : "bg-slate-900 border-slate-700 text-white hover:bg-slate-800"
@@ -265,16 +265,16 @@ export function UserDashboard() {
         {/* TAB 4: CHURNING */}
         {activeTab === "churning" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4 sm:p-5">
               <span className="text-[10px] uppercase font-bold text-amber-400">HDFC 6-Month Cooling Rule</span>
-              <div className="text-xl font-bold text-white mt-1">{portfolio.churning.hdfcCooloff.resetDate}</div>
-              <p className="text-xs text-slate-300 mt-2">HDFC Bank enforces a 6-month gap between fresh card applications to avoid internal rejections.</p>
+              <div className="text-lg sm:text-xl font-bold text-white mt-1">{portfolio.churning.hdfcCooloff.resetDate}</div>
+              <p className="text-xs text-slate-300 mt-2 leading-relaxed">HDFC Bank enforces a 6-month gap between fresh card applications to avoid internal rejections.</p>
             </div>
 
-            <div className="rounded-2xl border border-slate-800 bg-slate-950 p-5">
+            <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4 sm:p-5">
               <span className="text-[10px] uppercase font-bold text-cyan-400">Axis Bank 3-Card Limit</span>
-              <div className="text-xl font-bold text-white mt-1">{portfolio.churning.axisHoldingLimit.status}</div>
-              <p className="text-xs text-slate-400 mt-2">Axis Bank limits individuals to holding a maximum of 3 active credit cards.</p>
+              <div className="text-lg sm:text-xl font-bold text-white mt-1">{portfolio.churning.axisHoldingLimit.status}</div>
+              <p className="text-xs text-slate-400 mt-2 leading-relaxed">Axis Bank limits individuals to holding a maximum of 3 active credit cards.</p>
             </div>
           </div>
         )}

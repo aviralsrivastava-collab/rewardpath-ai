@@ -56,14 +56,14 @@ export function WalletOptimizer() {
   const bestGroceriesCard = [...activeCards].sort((a, b) => b.groceriesScore - a.groceriesScore)[0] ?? activeCards[0];
 
   return (
-    <section id="optimizer" className="px-4 py-20 sm:px-6 bg-slate-900 text-white border-t border-slate-800">
+    <section id="optimizer" className="px-3.5 py-16 sm:px-6 sm:py-20 bg-slate-900 text-white border-t border-slate-800">
       <div className="mx-auto max-w-5xl">
-        <div className="text-center mb-10">
+        <div className="text-center mb-8 sm:mb-10">
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-400 mb-2">
             <Zap className="h-3.5 w-3.5" />
             <span>Accelerator & Downgrade Engine</span>
           </div>
-          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-white">
+          <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-white">
             Wallet Multiplier & Downgrade Arbitrage
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-slate-300">
@@ -72,7 +72,7 @@ export function WalletOptimizer() {
         </div>
 
         {/* Card Selector Pills */}
-        <div className="flex flex-wrap gap-2 justify-center mb-8">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center mb-6 sm:mb-8">
           {allCardsList.map((c) => {
             const isSelected = selectedCards.includes(c.id);
             return (
@@ -81,40 +81,40 @@ export function WalletOptimizer() {
                 type="button"
                 onClick={() => toggleCard(c.id)}
                 aria-pressed={isSelected}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all cursor-pointer border active:scale-98 ${
                   isSelected
                     ? "bg-amber-500 text-slate-950 border-amber-400 shadow-lg"
                     : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700"
                 }`}
               >
-                <CheckCircle2 className={`h-4 w-4 ${isSelected ? "text-slate-950" : "text-slate-600"}`} />
-                {c.name}
+                <CheckCircle2 className={`h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0 ${isSelected ? "text-slate-950" : "text-slate-600"}`} />
+                <span>{c.name}</span>
               </button>
             );
           })}
         </div>
 
         {/* Optimization Matrix */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
           {/* Active Routing */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-950 p-6 space-y-4 shadow-xl">
-            <h3 className="text-sm font-bold uppercase text-amber-400 tracking-wider flex items-center gap-2">
-              <Sparkles className="h-4 w-4" /> Category Spend Routing Strategy
+          <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4 sm:p-6 space-y-4 shadow-xl">
+            <h3 className="text-xs sm:text-sm font-bold uppercase text-amber-400 tracking-wider flex items-center gap-2">
+              <Sparkles className="h-4 w-4 shrink-0" /> Category Spend Routing Strategy
             </h3>
-            <div className="space-y-3 text-xs">
-              <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
+            <div className="space-y-2.5 sm:space-y-3 text-xs">
+              <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                 <span>✈️ <strong>Travel & Airfare:</strong></span>
                 <span className="text-emerald-400 font-extrabold">Route to {bestTravelCard.name} ({bestTravelCard.travel})</span>
               </div>
-              <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
-                <span>🍽️ <strong>Dining & Swiggy/Zomato:</strong></span>
+              <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                <span>🍽️ <strong>Dining & Delivery:</strong></span>
                 <span className="text-emerald-400 font-extrabold">Route to {bestDiningCard.name} ({bestDiningCard.dining})</span>
               </div>
-              <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
-                <span>🛒 <strong>Online Groceries & Shopping:</strong></span>
+              <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                <span>🛒 <strong>Groceries & Shopping:</strong></span>
                 <span className="text-emerald-400 font-extrabold">Route to {bestGroceriesCard.name} ({bestGroceriesCard.groceries})</span>
               </div>
-              <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex justify-between items-center">
+              <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                 <span>⛽ <strong>Fuel & Gas Stations:</strong></span>
                 <span className="text-amber-400 font-extrabold">Surcharge Waiver Active (Up to ₹4,000/mo)</span>
               </div>
@@ -122,16 +122,16 @@ export function WalletOptimizer() {
           </div>
 
           {/* Downgrade Playbook */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-950 p-6 space-y-4 shadow-xl">
-            <h3 className="text-sm font-bold uppercase text-cyan-400 tracking-wider flex items-center gap-2">
-              <Zap className="h-4 w-4" /> Fee Avoidance & Retention Playbook
+          <div className="rounded-2xl border border-slate-800 bg-slate-950 p-4 sm:p-6 space-y-4 shadow-xl">
+            <h3 className="text-xs sm:text-sm font-bold uppercase text-cyan-400 tracking-wider flex items-center gap-2">
+              <Zap className="h-4 w-4 shrink-0" /> Fee Avoidance & Retention Playbook
             </h3>
             <div className="space-y-3 text-xs">
               {downgradeMatrix.map((item, idx) => (
                 <div key={idx} className="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
-                  <span className="text-amber-400 font-bold">{item.currentCard}</span>
+                  <span className="text-amber-400 font-bold text-xs">{item.currentCard}</span>
                   <p className="text-white font-medium">{item.action}</p>
-                  <p className="text-slate-400 text-[11px]">{item.benefit}</p>
+                  <p className="text-slate-400 text-[11px] leading-relaxed">{item.benefit}</p>
                 </div>
               ))}
             </div>

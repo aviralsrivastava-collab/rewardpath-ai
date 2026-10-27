@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ShieldCheck, Trash2, CheckCircle2, Lock, EyeOff } from "lucide-react";
+import Link from "next/link";
+import { ShieldCheck, Trash2, CheckCircle2, Lock, EyeOff, ArrowLeft } from "lucide-react";
 
 export default function PrivacyPage() {
   const [deleted, setDeleted] = useState(false);
@@ -25,35 +26,43 @@ export default function PrivacyPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-24 sm:px-6 text-white space-y-10">
-      <div className="border-b border-slate-800 pb-6 space-y-2">
-        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400">
-          <ShieldCheck className="h-4 w-4" />
-          <span>Verified User Privacy & Data Protection Policy</span>
+    <div className="mx-auto max-w-4xl px-3.5 py-20 sm:px-6 sm:py-24 text-white space-y-8 sm:space-y-10">
+      <div className="border-b border-slate-800 pb-6 space-y-3">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 hover:text-amber-300 transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to RewardPath Home
+        </Link>
+        <div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-400 mb-2">
+            <ShieldCheck className="h-4 w-4" />
+            <span>Verified User Privacy & Data Protection Policy</span>
+          </div>
+          <h1 className="font-display text-2xl sm:text-4xl font-black text-white">Privacy & Data Governance Map</h1>
+          <p className="text-slate-400 text-xs sm:text-sm mt-1">
+            Last updated: August 2026. Zero full credit card numbers, passwords, or plaintext financial credentials are ever collected or stored.
+          </p>
         </div>
-        <h1 className="font-display text-4xl font-black text-white">Privacy & Data Governance Map</h1>
-        <p className="text-slate-400 text-sm">
-          Last updated: August 2026. Zero full credit card numbers, passwords, or plaintext financial credentials are ever collected or stored.
-        </p>
       </div>
 
       {/* DATA FLOW MAP */}
       <section className="space-y-4">
-        <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2">
+        <h2 className="text-lg sm:text-xl font-bold text-amber-400 flex items-center gap-2">
           <Lock className="h-5 w-5" /> 1. Complete User Personal Data Flow Map
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
             <span className="text-amber-400 font-bold uppercase text-[10px]">Data Collection Points</span>
-            <p className="text-slate-300">
+            <p className="text-slate-300 leading-relaxed">
               • <strong>Search Queries:</strong> Temporary text queries (e.g. Dubai trip, CIBIL odds) processed in-memory.<br />
               • <strong>Spend Profiles:</strong> Monthly category numbers used in-browser to calculate Net Annual Value (NAV).<br />
               • <strong>Zero PII Collected:</strong> No emails, phone numbers, passwords, names, or addresses required.
             </p>
           </div>
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
             <span className="text-emerald-400 font-bold uppercase text-[10px]">Storage & Cookie Policy</span>
-            <p className="text-slate-300">
+            <p className="text-slate-300 leading-relaxed">
               • <strong>Cookies:</strong> Configured with <code className="text-amber-300">httpOnly</code>, <code className="text-amber-300">Secure</code>, and <code className="text-amber-300">SameSite=Strict</code> flags.<br />
               • <strong>No PII in LocalStorage:</strong> Only anonymous cookie consent preferences stored locally.
             </p>
@@ -63,11 +72,11 @@ export default function PrivacyPage() {
 
       {/* THIRD PARTY AUDIT */}
       <section className="space-y-4">
-        <h2 className="text-xl font-bold text-amber-400 flex items-center gap-2">
+        <h2 className="text-lg sm:text-xl font-bold text-amber-400 flex items-center gap-2">
           <EyeOff className="h-5 w-5" /> 2. Third-Party Integrations & Data Minimization
         </h2>
-        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-xs space-y-2 text-slate-300">
-          <p>
+        <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 text-xs space-y-2 text-slate-300">
+          <p className="leading-relaxed">
             • <strong>OpenAI API:</strong> Only anonymized card names and query text are sent for LLM reasoning synthesis. No personal user credentials or identifiers are transmitted.<br />
             • <strong>Google Analytics 4 (GA4):</strong> IP anonymization (<code className="text-amber-300">anonymize_ip: true</code>) is enforced. Analytics scripts execute strictly after explicit user consent.
           </p>
@@ -75,25 +84,25 @@ export default function PrivacyPage() {
       </section>
 
       {/* INTERACTIVE DATA DELETION CONTROL */}
-      <section className="p-6 rounded-3xl border border-red-500/40 bg-slate-950 space-y-4">
-        <div className="flex items-center justify-between">
+      <section className="p-4 sm:p-6 rounded-3xl border border-red-500/40 bg-slate-950 space-y-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Trash2 className="h-5 w-5 text-red-400" /> Right to be Forgotten (Data Deletion & Anonymization)
+            <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+              <Trash2 className="h-5 w-5 text-red-400 shrink-0" /> Right to be Forgotten (Data Deletion & Anonymization)
             </h3>
             <p className="text-xs text-slate-400 mt-1">
               Purge all local storage state, clear cookies, and reset session data instantly.
             </p>
           </div>
           {deleted ? (
-            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold">
+            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold shrink-0">
               <CheckCircle2 className="h-4 w-4" /> Data Purged & Anonymized
             </span>
           ) : (
             <button
               onClick={handlePurgeData}
               disabled={loading}
-              className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-lg transition-all cursor-pointer disabled:opacity-50"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-lg transition-all cursor-pointer disabled:opacity-50 shrink-0"
             >
               {loading ? "Purging Data…" : "Purge All My Data"}
             </button>

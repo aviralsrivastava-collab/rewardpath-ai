@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Navbar, Footer, CookieConsent } from "@/components/layout";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#020617",
+};
 
 export const metadata: Metadata = {
   title: "RewardPath — AI Credit Card & Travel Rewards Advisor",
@@ -34,10 +34,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="min-h-screen font-sans">
+    <html lang="en">
+      <body className="min-h-screen font-sans bg-slate-950 text-slate-100 selection:bg-amber-500 selection:text-slate-950">
         <Navbar />
-        <main>{children}</main>
+        <main className="w-full overflow-x-hidden">{children}</main>
         <Footer />
         <CookieConsent />
       </body>
