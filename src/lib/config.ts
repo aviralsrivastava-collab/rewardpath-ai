@@ -3,6 +3,7 @@ export interface AppConfig {
   isProduction: boolean;
   appUrl: string;
   openaiApiKey?: string;
+  geminiApiKey?: string;
   adminSecretKey?: string;
   databaseUrl?: string;
 }
@@ -12,6 +13,7 @@ export function validateAndGetConfig(): AppConfig {
   const isProduction = nodeEnv === "production";
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
   const openaiApiKey = process.env.OPENAI_API_KEY;
+  const geminiApiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
   const adminSecretKey = process.env.ADMIN_SECRET_KEY;
   let databaseUrl = process.env.DATABASE_URL;
 
@@ -23,7 +25,7 @@ export function validateAndGetConfig(): AppConfig {
   // Refuse startup in production if critical variables are missing
   if (isProduction) {
     const missingVars: string[] = [];
-    if (!openaiApiKey) missingVars.push("OPENAI_API_KEY");
+    if (!openaiApiKey && !geminiApiKey) missingVars.push("OPENAI_API_KEY or GEMINI_API_KEY");
     if (!adminSecretKey) missingVars.push("ADMIN_SECRET_KEY");
 
     if (missingVars.length > 0) {
@@ -41,6 +43,7 @@ export function validateAndGetConfig(): AppConfig {
     isProduction,
     appUrl,
     openaiApiKey,
+    geminiApiKey,
     adminSecretKey,
     databaseUrl,
   };

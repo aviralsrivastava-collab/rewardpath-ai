@@ -847,42 +847,90 @@ export class RewardPathAIModel {
   }
 
   static async synthesizeWithLLM(query: string, baseResponse: NexusResponse): Promise<NexusResponse> {
-    if (!process.env.OPENAI_API_KEY) {
+    const geminiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+    const openaiKey = process.env.OPENAI_API_KEY;
+
+    if (!openaiKey && !geminiKey) {
       return baseResponse;
     }
 
-    try {
-      const OpenAI = (await import("openai")).default;
-      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const context = baseResponse.recommendations
+      .map(
+        (r) => `${r.cardName}: NAV ₹${r.netAnnualValue}, fee ₹${r.annualFee}, rewards ₹${r.annualRewards}.`
+      )
+      .join("\n");
 
-      const context = baseResponse.recommendations
-        .map(
-          (r) => `${r.cardName}: NAV ₹${r.netAnnualValue}, fee ₹${r.annualFee}, rewards ₹${r.annualRewards}.`
-        )
-        .join("\n");
-
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        response_format: { type: "json_object" },
-        messages: [
+    // 1. Google Gemini integration
+    if (geminiKey) {
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key=${geminiKey}`,
           {
-            role: "system",
-            content: `You are RewardPath Command Center AI. Summarize recommendation strategy maintaining exact numeric claims.`,
-          },
-          {
-            role: "user",
-            content: `Query: "${query}"\n\nVerified Context:\n${context}`,
-          },
-        ],
-        temperature: 0.2,
-      });
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    {
+                      text: `You are RewardPath Command Center AI. Summarize recommendation strategy maintaining exact numeric claims. Respond strictly in valid JSON with a "summary" key: {"summary": "your synthesis"}.\n\nQuery: "${query}"\n\nVerified Context:\n${context}`,
+                    },
+                  ],
+                },
+              ],
+              generationConfig: {
+                responseMimeType: "application/json",
+                temperature: 0.2,
+              },
+            }),
+          }
+        );
 
-      const parsed = JSON.parse(completion.choices[0]?.message?.content ?? "{}");
-      if (parsed.summary) {
-        baseResponse.summary = parsed.summary;
+        if (response.ok) {
+          const data = await response.json();
+          const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (rawText) {
+            const parsed = JSON.parse(rawText);
+            if (parsed.summary) {
+              baseResponse.summary = parsed.summary;
+              return baseResponse;
+            }
+          }
+        }
+      } catch {
+        // Fallback to OpenAI or base response
       }
-    } catch {
-      // Fallback
+    }
+
+    // 2. OpenAI fallback
+    if (openaiKey) {
+      try {
+        const OpenAI = (await import("openai")).default;
+        const openai = new OpenAI({ apiKey: openaiKey });
+
+        const completion = await openai.chat.completions.create({
+          model: "gpt-4o-mini",
+          response_format: { type: "json_object" },
+          messages: [
+            {
+              role: "system",
+              content: `You are RewardPath Command Center AI. Summarize recommendation strategy maintaining exact numeric claims.`,
+            },
+            {
+              role: "user",
+              content: `Query: "${query}"\n\nVerified Context:\n${context}`,
+            },
+          ],
+          temperature: 0.2,
+        });
+
+        const parsed = JSON.parse(completion.choices[0]?.message?.content ?? "{}");
+        if (parsed.summary) {
+          baseResponse.summary = parsed.summary;
+        }
+      } catch {
+        // Fallback
+      }
     }
 
     return baseResponse;
