@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: ["class", '[data-theme="dark"]'],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,6 +10,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        bg: "var(--bg)",
+        surface: {
+          DEFAULT: "var(--surface)",
+          glass: "var(--surface-glass)",
+        },
+        line: "var(--line)",
+        text: {
+          DEFAULT: "var(--text)",
+          muted: "var(--muted)",
+        },
+        gold: {
+          DEFAULT: "var(--gold)",
+          deep: "var(--gold-deep)",
+          light: "#f7e5b2",
+        },
+        violet: {
+          DEFAULT: "var(--violet)",
+          glow: "rgba(124, 108, 255, 0.25)",
+        },
+        success: "var(--success)",
         brand: {
           50: "#f0f7ff",
           100: "#e0effe",
@@ -22,23 +43,22 @@ const config: Config = {
           900: "#0b3f6e",
           950: "#072849",
         },
-        surface: {
-          DEFAULT: "#ffffff",
-          muted: "#f8fafc",
-          border: "#e2e8f0",
-        },
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "system-ui", "sans-serif"],
+        serif: ["var(--font-fraunces)", "Fraunces", "serif"],
+        sans: ["var(--font-instrument)", "Instrument Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
       },
       boxShadow: {
-        card: "0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04)",
-        "card-hover": "0 10px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04)",
+        gold: "0 0 30px -5px rgba(231, 195, 111, 0.15)",
+        violet: "0 0 30px -5px rgba(124, 108, 255, 0.18)",
+        glass: "0 8px 32px 0 rgba(0, 0, 0, 0.36)",
+        card: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
       },
       animation: {
-        "fade-in": "fadeIn 0.5s ease-out forwards",
-        "slide-up": "slideUp 0.5s ease-out forwards",
+        "fade-in": "fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "slide-up": "slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "float-gentle": "floatGentle 4s ease-in-out infinite",
+        "pulse-subtle": "pulseSubtle 3s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
@@ -46,8 +66,16 @@ const config: Config = {
           "100%": { opacity: "1" },
         },
         slideUp: {
-          "0%": { opacity: "0", transform: "translateY(12px)" },
+          "0%": { opacity: "0", transform: "translateY(16px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        floatGentle: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-6px)" },
+        },
+        pulseSubtle: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.7" },
         },
       },
     },

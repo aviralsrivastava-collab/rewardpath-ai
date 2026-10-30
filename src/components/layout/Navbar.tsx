@@ -1,230 +1,114 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Sparkles, ShieldCheck, ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
-
-const primaryNavLinks = [
-  { href: "#hero-search", label: "AI Engines" },
-  { href: "#calculator", label: "ROI Calculator" },
-  { href: "#compare", label: "Compare Cards" },
-  { href: "#breakeven", label: "CPP Breakeven" },
-  { href: "#approval-odds", label: "Approval Odds" },
-];
-
-const secondaryNavLinks = [
-  { href: "#optimizer", label: "Wallet Optimizer" },
-  { href: "#dashboard", label: "User Portfolio" },
-  { href: "#award-caching", label: "Award Seats" },
-  { href: "#faq", label: "FAQ" },
-];
-
-const allNavLinks = [...primaryNavLinks, ...secondaryNavLinks];
+import { Sparkles, Sun, Moon, Menu, X, Compass, Calculator, GitCompare, ShieldAlert, Award } from "lucide-react";
+import { useAppStore } from "@/lib/store/useAppStore";
 
 export function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
+  const { theme, setTheme, openAdvisor } = useAppStore();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const toggleTheme = () => {
+    if (theme === "dark") setTheme("light");
+    else setTheme("dark");
+  };
 
-  // Prevent background scrolling when mobile menu is open
-  useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
-
-  // Close menus on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setMobileOpen(false);
-        setMoreDropdownOpen(false);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  const navLinks = [
+    { label: "Trip & Deals", href: "#engines", icon: Compass },
+    { label: "NAV Calculator", href: "#calculator", icon: Calculator },
+    { label: "Compare", href: "#compare", icon: GitCompare },
+    { label: "CIBIL Odds", href: "#cibil", icon: ShieldAlert },
+    { label: "Portfolio", href: "#portfolio", icon: Award },
+  ];
 
   return (
-    <>
-      <header
-        className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-          scrolled || mobileOpen
-            ? "bg-slate-950/95 backdrop-blur-xl border-b border-slate-800 shadow-2xl"
-            : "bg-slate-950/75 backdrop-blur-md border-b border-slate-800/50"
-        )}
-      >
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-3.5 py-3 sm:px-6 lg:px-8">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 via-amber-400 to-yellow-300 text-slate-950 font-black text-lg shadow-lg group-hover:scale-105 transition-transform">
-              R
+    <header className="sticky top-0 z-40 w-full border-b border-line/60 bg-surface/85 backdrop-blur-xl transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+        {/* Brand Logo */}
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-gold via-gold-deep to-amber-700 flex items-center justify-center shadow-gold transition-transform group-hover:scale-105">
+            <span className="font-serif font-black text-slate-950 text-base sm:text-lg tracking-wider">
+              RP
             </span>
-            <div className="flex flex-col">
-              <span className="font-display text-base sm:text-lg font-black tracking-tight text-white flex items-center gap-1.5">
-                RewardPath
-                <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">
-                  India AI
-                </span>
-              </span>
-              <span className="text-[9px] text-slate-400 uppercase font-semibold tracking-wider hidden xs:inline-block">
-                Cites HDFC, Axis, SBI & Amex
-              </span>
-            </div>
-          </Link>
-
-          {/* Desktop & Laptop Nav: Perfectly balanced across 1024px - 1440px */}
-          <ul className="hidden items-center gap-3 lg:gap-4 xl:gap-5 lg:flex">
-            {primaryNavLinks.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="text-xs font-bold text-slate-300 transition-colors hover:text-amber-400 whitespace-nowrap py-1"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-
-            {/* Extra links visible on larger laptop/desktop screens */}
-            {secondaryNavLinks.slice(0, 2).map((link) => (
-              <li key={link.href} className="hidden 2xl:block">
-                <a
-                  href={link.href}
-                  className="text-xs font-bold text-slate-300 transition-colors hover:text-amber-400 whitespace-nowrap py-1"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-
-            {/* "More" Dropdown on 1024px-1440px laptops */}
-            <li className="relative">
-              <button
-                type="button"
-                onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
-                className="flex items-center gap-1 text-xs font-bold text-slate-300 hover:text-amber-400 py-1"
-                aria-expanded={moreDropdownOpen}
-              >
-                <span>More</span>
-                <ChevronDown className={cn("h-3.5 w-3.5 transition-transform", moreDropdownOpen && "rotate-180")} />
-              </button>
-
-              {moreDropdownOpen && (
-                <div
-                  className="absolute right-0 top-full mt-2 w-48 rounded-2xl border border-slate-800 bg-slate-900/95 p-2 shadow-2xl backdrop-blur-xl animate-fade-in"
-                  onMouseLeave={() => setMoreDropdownOpen(false)}
-                >
-                  {secondaryNavLinks.map((link) => (
-                    <a
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setMoreDropdownOpen(false)}
-                      className="block rounded-xl px-3 py-2 text-xs font-bold text-slate-300 hover:bg-slate-800 hover:text-amber-400 transition-colors"
-                    >
-                      {link.label}
-                    </a>
-                  ))}
-                </div>
-              )}
-            </li>
-          </ul>
-
-          {/* Right Action Buttons */}
-          <div className="hidden items-center gap-2.5 lg:flex shrink-0">
-            <a
-              href="#approval-odds"
-              className="hidden xl:flex items-center gap-1 text-[11px] font-extrabold text-emerald-400 bg-emerald-950/80 px-2.5 py-1.5 rounded-xl border border-emerald-800"
-            >
-              <ShieldCheck className="h-3.5 w-3.5" />
-              Soft-Pull
-            </a>
-
-            <a
-              href="#hero-search"
-              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-3.5 py-2 text-xs font-bold text-slate-950 shadow-md hover:from-amber-400 hover:to-amber-500 transition-all cursor-pointer whitespace-nowrap"
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>Launch AI</span>
-            </a>
           </div>
+          <div>
+            <span className="font-serif text-lg sm:text-xl font-medium tracking-tight text-text block leading-none">
+              RewardPath
+            </span>
+            <span className="text-[10px] tracking-widest uppercase font-semibold text-gold block mt-0.5">
+              Private Aviation & Banking
+            </span>
+          </div>
+        </Link>
 
-          {/* Mobile Menu Toggle Button */}
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-xl p-2.5 text-slate-300 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500/50 lg:hidden"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-nav-menu"
-            aria-label="Toggle navigation menu"
-          >
-            {mobileOpen ? <X className="h-6 w-6 text-white" /> : <Menu className="h-6 w-6 text-white" />}
-          </button>
+        {/* Desktop Nav Links */}
+        <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
+          {navLinks.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="px-3.5 py-2 rounded-xl text-xs xl:text-sm font-medium text-text-muted hover:text-text hover:bg-surface-glass border border-transparent hover:border-line transition-all"
+            >
+              {item.label}
+            </a>
+          ))}
         </nav>
 
-        {/* Mobile Navigation Drawer */}
-        {mobileOpen && (
-          <div
-            id="mobile-nav-menu"
-            className="border-t border-slate-800 bg-slate-950/98 px-4 py-4 lg:hidden max-h-[calc(100dvh-4.5rem)] overflow-y-auto animate-fade-in shadow-2xl"
+        {/* Actions (Theme Switcher + Ask AI Button) */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Theme Switcher */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Toggle color theme"
+            className="p-2 sm:p-2.5 rounded-xl border border-line bg-surface hover:bg-surface-glass text-text-muted hover:text-gold transition-all"
           >
-            <ul className="flex flex-col gap-1">
-              {allNavLinks.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-bold text-slate-200 hover:bg-slate-900 hover:text-amber-400 transition-colors"
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <span>{link.label}</span>
-                    <span className="text-slate-600">→</span>
-                  </a>
-                </li>
-              ))}
+            {theme === "light" ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+          </button>
 
-              <li className="pt-3 mt-1 border-t border-slate-800/80 flex flex-col gap-2">
-                <a
-                  href="#approval-odds"
-                  className="flex items-center justify-center gap-1.5 w-full rounded-xl bg-emerald-950/80 border border-emerald-800/60 py-3 text-center text-xs font-extrabold text-emerald-400"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <ShieldCheck className="h-4 w-4" /> Soft-Pull Simulation Guaranteed
-                </a>
+          {/* AI Copilot Slideover Trigger */}
+          <button
+            type="button"
+            onClick={() => openAdvisor()}
+            className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-gradient-to-r from-gold to-gold-deep text-slate-950 text-xs sm:text-sm font-bold shadow-gold hover:opacity-95 active:scale-95 transition-all cursor-pointer"
+          >
+            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-950" />
+            <span className="hidden sm:inline">Ask AI Advisor</span>
+            <span className="sm:hidden">Advisor</span>
+          </button>
 
-                <a
-                  href="#hero-search"
-                  className="flex items-center justify-center gap-1.5 w-full rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 py-3 text-center text-sm font-black text-slate-950 shadow-lg active:scale-98 transition-transform"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <Sparkles className="h-4 w-4" /> Launch AI Search Engine
-                </a>
-              </li>
-            </ul>
-          </div>
-        )}
-      </header>
+          {/* Mobile Menu Toggle */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle mobile menu"
+            className="lg:hidden p-2 rounded-xl border border-line bg-surface text-text-muted hover:text-text"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
 
-      {/* Backdrop overlay for mobile menu */}
-      {mobileOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-sm lg:hidden"
-          onClick={() => setMobileOpen(false)}
-          aria-hidden="true"
-        />
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden border-b border-line bg-surface/95 backdrop-blur-2xl px-4 py-4 space-y-2 animate-slide-up">
+          {navLinks.map((item) => {
+            const Icon = item.icon;
+            return (
+              <a
+                key={item.label}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-text hover:bg-line/40 transition-colors"
+              >
+                <Icon className="w-4 h-4 text-gold" />
+                <span>{item.label}</span>
+              </a>
+            );
+          })}
+        </div>
       )}
-    </>
+    </header>
   );
 }

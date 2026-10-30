@@ -1,72 +1,105 @@
+import React from "react";
 import Link from "next/link";
-import { ShieldCheck } from "lucide-react";
-
-const footerLinks = {
-  Product: [
-    { label: "AI Engines", href: "#hero-search" },
-    { label: "ROI Calculator", href: "#calculator" },
-    { label: "Card Comparison", href: "#compare" },
-    { label: "CPP Breakeven Math", href: "#breakeven" },
-    { label: "Approval Odds Checker", href: "#approval-odds" },
-    { label: "User Portfolio Dashboard", href: "#dashboard" },
-    { label: "Wallet Optimizer", href: "#optimizer" },
-    { label: "Award Seat Caching", href: "#award-caching" },
-  ],
-  Legal: [
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Terms of Service", href: "/terms" },
-    { label: "Affiliate Disclosure", href: "/affiliate-disclosure" },
-    { label: "SOC 2 Trust Center", href: "#trust-center" },
-  ],
-};
+import { ShieldCheck, Lock } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="border-t border-slate-800 bg-slate-950 text-white">
-      <div className="mx-auto max-w-6xl px-3.5 py-10 sm:px-6 sm:py-12">
-        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="sm:col-span-2">
-            <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-amber-400 text-slate-950 font-black text-sm">
-                R
-              </span>
-              <span className="font-display text-lg font-black text-white">RewardPath AI</span>
+    <footer className="border-t border-line bg-surface/90 text-text transition-colors duration-300 z-10 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+          {/* Brand Col */}
+          <div className="md:col-span-2 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gold via-gold-deep to-amber-700 flex items-center justify-center font-serif font-black text-slate-950 text-sm">
+                RP
+              </div>
+              <span className="font-serif text-lg font-medium text-text">RewardPath</span>
             </div>
-            <p className="mt-3 max-w-sm text-xs leading-relaxed text-slate-400">
-              AI-powered credit card and travel rewards advisory platform grounded in cited issuer terms. Net annual value math shown transparently. Educational purpose only — not financial advice.
+
+            <p className="text-xs text-text-muted leading-relaxed max-w-md">
+              RewardPath is an educational credit card rewards and private aviation advisory engine for India. All Net Annual Value calculations, milestone trackers, and approval simulators are deterministic and cited to verified bank terms.
             </p>
-            <div className="mt-3 flex items-center gap-1.5 text-xs text-emerald-400 font-bold">
-              <ShieldCheck className="h-4 w-4 shrink-0" />
-              <span>Soft-pull credit simulation — Zero score impact</span>
+
+            <div className="flex flex-wrap items-center gap-4 text-xs text-text-muted pt-1">
+              <div className="flex items-center gap-1.5 text-success">
+                <ShieldCheck className="w-4 h-4" />
+                <span>Zero CIBIL Bureau Inquiries</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-gold">
+                <Lock className="w-4 h-4" />
+                <span>Zero Bank Credential Requests</span>
+              </div>
             </div>
           </div>
 
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-amber-400">{title}</h3>
-              <ul className="mt-3 space-y-1.5 sm:space-y-2">
-                {links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-xs text-slate-300 transition-colors hover:text-amber-400 inline-block py-0.5"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Quick Links */}
+          <div className="space-y-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-gold block">
+              Advisory Engines
+            </span>
+            <ul className="space-y-2 text-xs text-text-muted">
+              <li>
+                <a href="#engines" className="hover:text-gold transition-colors">
+                  Destination Trip Planner
+                </a>
+              </li>
+              <li>
+                <a href="#calculator" className="hover:text-gold transition-colors">
+                  Net Annual Value Calculator
+                </a>
+              </li>
+              <li>
+                <a href="#compare" className="hover:text-gold transition-colors">
+                  Card Benchmark Matrix
+                </a>
+              </li>
+              <li>
+                <a href="#cibil" className="hover:text-gold transition-colors">
+                  CIBIL Underwriting Simulator
+                </a>
+              </li>
+              <li>
+                <a href="#portfolio" className="hover:text-gold transition-colors">
+                  Milestone & Portfolio Tracker
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Legal Links */}
+          <div className="space-y-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-gold block">
+              Compliance & Legal
+            </span>
+            <ul className="space-y-2 text-xs text-text-muted">
+              <li>
+                <Link href="/privacy" className="hover:text-gold transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-gold transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/affiliate-disclosure" className="hover:text-gold transition-colors">
+                  Affiliate Disclosure
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <div className="mt-8 sm:mt-10 border-t border-slate-800 pt-6 text-[10px] sm:text-[11px] leading-relaxed text-slate-400 space-y-2">
+        {/* Legal Disclaimer Box */}
+        <div className="pt-8 border-t border-line/60 space-y-3 text-[11px] text-text-muted leading-relaxed">
           <p>
-            © {new Date().getFullYear()} RewardPath. Information provided is for educational and informational purposes only and does not constitute financial advice. Credit card terms, annual fees, and welcome bonus offers change frequently — verify current details directly on the issuer&apos;s website before applying.
+            <strong>Regulatory & Financial Disclaimer:</strong> RewardPath is not a bank, non-banking financial company (NBFC), or registered financial advisor with SEBI or RBI. Information provided across all calculators, simulators, and AI copilot interactions is for educational and informational analysis only and should not be construed as financial, legal, or investment advice. Credit card approvals, terms, interest rates, and welcome bonuses remain subject to sole discretionary underwriting by issuing banks (HDFC Bank, Axis Bank, SBI Card, American Express, ICICI Bank).
           </p>
-          <p className="text-amber-400/90 font-medium">
-            🤝 Affiliate Relationship Disclosure: We may earn a commission when you apply for a credit card through our links. This disclosure is displayed directly on every recommendation component. Affiliate commissions do not alter our recommendation math or ranking logic.
-          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-2 text-text-muted/70">
+            <span>© {new Date().getFullYear()} RewardPath AI. All rights reserved.</span>
+            <span>Educational Use Only • Grounded in Official Issuer Terms</span>
+          </div>
         </div>
       </div>
     </footer>
