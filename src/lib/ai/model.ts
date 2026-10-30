@@ -381,6 +381,87 @@ function buildConsumerBehaviorInsight(query: string): ConsumerBehaviorInsight {
   };
 }
 
+export function inferSpendProfile(query: string): SpendProfile {
+  const lower = query.toLowerCase();
+  const spend: SpendProfile = {
+    dining: 15000,
+    groceries: 25000,
+    travel: 20000,
+    gas: 10000,
+    other: 30000,
+  };
+
+  const diningMatch =
+    lower.match(/(?:₹|\$)?(\d+[\d,]*)\s*(?:a|per|\/)?\s*(?:mo|month)?\s*(?:on|for)?\s*(?:dining|restaurant|food)/) ||
+    lower.match(/(?:dining|restaurant|food)\s*(?:of|is|:)?\s*(?:₹|\$)?(\d+[\d,]*)/);
+  if (diningMatch?.[1]) spend.dining = parseInt(diningMatch[1].replace(/,/g, ""), 10);
+  else if (
+    lower.includes("dining") ||
+    lower.includes("restaurant") ||
+    lower.includes("food") ||
+    lower.includes("zomato") ||
+    lower.includes("swiggy")
+  ) {
+    spend.dining = 40000;
+    spend.groceries = 15000;
+    spend.travel = 10000;
+  }
+
+  const grocMatch =
+    lower.match(/(?:₹|\$)?(\d+[\d,]*)\s*(?:a|per|\/)?\s*(?:mo|month)?\s*(?:on|for)?\s*(?:grocer|supermarket)/) ||
+    lower.match(/(?:grocer|supermarket)\s*(?:of|is|:)?\s*(?:₹|\$)?(\d+[\d,]*)/);
+  if (grocMatch?.[1]) spend.groceries = parseInt(grocMatch[1].replace(/,/g, ""), 10);
+  else if (
+    lower.includes("grocer") ||
+    lower.includes("supermarket") ||
+    lower.includes("blinkit") ||
+    lower.includes("zepto") ||
+    lower.includes("instamart") ||
+    lower.includes("dmart")
+  ) {
+    spend.groceries = 45000;
+    spend.dining = 15000;
+    spend.travel = 10000;
+  }
+
+  const travelMatch =
+    lower.match(/(?:₹|\$)?(\d+[\d,]*)\s*(?:a|per|\/)?\s*(?:mo|month)?\s*(?:on|for)?\s*(?:travel|flight|hotel)/) ||
+    lower.match(/(?:travel|flight|hotel)\s*(?:of|is|:)?\s*(?:₹|\$)?(\d+[\d,]*)/);
+  if (travelMatch?.[1]) spend.travel = parseInt(travelMatch[1].replace(/,/g, ""), 10);
+  else if (
+    lower.includes("travel") ||
+    lower.includes("flight") ||
+    lower.includes("hotel") ||
+    lower.includes("vacation") ||
+    lower.includes("dubai") ||
+    lower.includes("london") ||
+    lower.includes("paris") ||
+    lower.includes("singapore") ||
+    lower.includes("trip")
+  ) {
+    spend.travel = 50000;
+    spend.dining = 15000;
+    spend.groceries = 10000;
+  }
+
+  const gasMatch =
+    lower.match(/(?:₹|\$)?(\d+[\d,]*)\s*(?:a|per|\/)?\s*(?:mo|month)?\s*(?:on|for)?\s*(?:gas|ev|fuel|petrol)/) ||
+    lower.match(/(?:gas|ev|fuel|petrol)\s*(?:of|is|:)?\s*(?:₹|\$)?(\d+[\d,]*)/);
+  if (gasMatch?.[1]) spend.gas = parseInt(gasMatch[1].replace(/,/g, ""), 10);
+  else if (
+    lower.includes("gas") ||
+    lower.includes("fuel") ||
+    lower.includes("petrol") ||
+    lower.includes("diesel") ||
+    lower.includes("ev charging")
+  ) {
+    spend.gas = 25000;
+    spend.dining = 10000;
+  }
+
+  return spend;
+}
+
 export class RewardPathAIModel {
   static getStatus(): AIModelStatus {
     const artifact = loadEmbeddingIndex();
@@ -465,10 +546,15 @@ export class RewardPathAIModel {
       }));
   }
 
-  static runNexusEngine(query: string, walletCards: string[] = []): NexusResponse {
+  static runNexusEngine(
+    query: string,
+    walletCards: string[] = [],
+    customSpend?: SpendProfile
+  ): NexusResponse {
     const lower = query.toLowerCase();
     const cards = getAllCards();
     const retrieved = this.retrieveContextChunks(query, 8);
+    const spend = customSpend || inferSpendProfile(query);
 
     // 1. ADVERSARIAL & EDGE CASES HANDLER (AD-01 to AD-05)
     const isVagueBestCard = lower === "what's the best card?" || lower === "what is the best card?" || lower === "best card";
@@ -737,8 +823,44 @@ export class RewardPathAIModel {
     const brandPartnerships = isPurchase ? SAMPLE_BRAND_PARTNERSHIPS : undefined;
     const purchaseProtection = isPurchase ? SAMPLE_PURCHASE_PROTECTION : undefined;
 
-    // Ranked Recommendations
-    const spend: SpendProfile = { dining: 15000, groceries: 25000, travel: 20000, gas: 10000, other: 30000 };
+    // Category & Intent Flags for scoring
+    const isGroc =
+      lower.includes("grocer") ||
+      lower.includes("supermarket") ||
+      lower.includes("blinkit") ||
+      lower.includes("zepto") ||
+      lower.includes("instamart") ||
+      lower.includes("dmart");
+    const isDining =
+      lower.includes("dining") ||
+      lower.includes("restaurant") ||
+      lower.includes("food") ||
+      lower.includes("zomato") ||
+      lower.includes("swiggy");
+    const isTravelQuery =
+      isDestination ||
+      isHinglishFlight ||
+      lower.includes("travel") ||
+      lower.includes("flight") ||
+      lower.includes("hotel") ||
+      lower.includes("airline");
+    const isFuel =
+      lower.includes("fuel") ||
+      lower.includes("gas") ||
+      lower.includes("petrol") ||
+      lower.includes("diesel") ||
+      lower.includes("cng");
+    const isCashback = lower.includes("cashback") || lower.includes("cash back");
+    const isLounge = lower.includes("lounge") || lower.includes("priority pass");
+    const isNoFee =
+      isHinglishNoFee ||
+      lower.includes("no fee") ||
+      lower.includes("no annual fee") ||
+      lower.includes("zero fee") ||
+      lower.includes("free") ||
+      lower.includes("0 fee") ||
+      lower.includes("bina fee");
+
     const recommendations: MatchmakerRecommendation[] = cards
       .map((card) => {
         const roi = calculateROI(card, spend);
@@ -762,15 +884,73 @@ export class RewardPathAIModel {
         ];
 
         let score = roi.netAnnualValue;
-        const isNoFee = isHinglishNoFee || lower.includes("no fee") || lower.includes("no annual fee") || lower.includes("zero fee") || lower.includes("free") || lower.includes("0 fee");
+
         if (isNoFee) {
           if (card.annualFee === 0) score += 10000000;
           else score -= card.annualFee * 20;
         }
-        if (isDestination && card.rewardCategories.travel >= 3) score += 500;
-        if (isProfitabilityCheck && card.annualFee >= 5000) score += 400;
 
-        const reasoning = `${card.name} delivers ₹${roi.netAnnualValue.toLocaleString()} net annual value (₹${roi.annualRewards.toLocaleString()} annual rewards − ₹${card.annualFee.toLocaleString()} fee) with transfer partners: ${card.transferPartners.join(", ") || "Direct cashback"}.`;
+        if (isGroc) {
+          score += (card.rewardCategories.groceries || 0) * 8000;
+          if (card.id === "sbi-cashback" || card.id === "icici-amazon-pay" || card.id === "hdfc-millennia") {
+            score += 25000;
+          }
+        }
+
+        if (isDining) {
+          score += (card.rewardCategories.dining || 0) * 8000;
+        }
+
+        if (isTravelQuery) {
+          score += (card.rewardCategories.travel || 0) * 8000;
+          if (card.forexMarkup <= 2.0) score += 15000;
+          if (card.transferPartners.length >= 3) score += 20000;
+        }
+
+        if (isFuel) {
+          score += (card.rewardCategories.gas || 0) * 15000;
+        }
+
+        if (isCashback) {
+          if (card.transferPartners.length === 0) score += 40000;
+        }
+
+        if (isLounge) {
+          if (card.loungeAccessSummary?.toLowerCase().includes("unlimited")) score += 40000;
+          else if (card.loungeAccessSummary && !card.loungeAccessSummary.includes("None")) score += 20000;
+        }
+
+        if (lower.includes("amazon") && card.id === "icici-amazon-pay") score += 100000;
+        if ((lower.includes("amex") || lower.includes("american express")) && card.issuer.toLowerCase().includes("american express")) score += 60000;
+        if (lower.includes("hdfc") && card.issuer.toLowerCase().includes("hdfc")) score += 50000;
+        if (lower.includes("axis") && card.issuer.toLowerCase().includes("axis")) score += 50000;
+        if (lower.includes("sbi") && card.issuer.toLowerCase().includes("sbi")) score += 50000;
+        if (lower.includes("marriott") && card.transferPartners.some((p) => p.toLowerCase().includes("marriott"))) score += 50000;
+        if (lower.includes("accor") && card.transferPartners.some((p) => p.toLowerCase().includes("accor"))) score += 50000;
+
+        if (isProfitabilityCheck && card.annualFee >= 5000) score += 20000;
+
+        // Retrieval relevance from RAG embeddings
+        const cardChunkRelevance = retrieved
+          .filter((r) => r.chunk.cardId === card.id)
+          .reduce((acc, r) => acc + r.score, 0);
+        score += cardChunkRelevance * 500;
+
+        // Context-aware reasoning
+        let reasoning = `${card.name} delivers ₹${roi.netAnnualValue.toLocaleString()} net annual value (₹${roi.annualRewards.toLocaleString()} annual rewards − ₹${card.annualFee.toLocaleString()} fee)`;
+        if (isGroc) {
+          reasoning += ` with ${card.rewardCategories.groceries}x rewards on groceries and supermarket spends.`;
+        } else if (isDining) {
+          reasoning += ` with ${card.rewardCategories.dining}x rewards on restaurant dining and food delivery.`;
+        } else if (isTravelQuery) {
+          reasoning += ` with ${card.rewardCategories.travel}x travel multipliers, ${card.forexMarkup}% low forex markup, and airline partners: ${card.transferPartners.join(", ") || "Direct cashback"}.`;
+        } else if (isFuel) {
+          reasoning += ` with ${card.rewardCategories.gas}x reward rate on fuel spends and surcharge waiver.`;
+        } else if (isCashback) {
+          reasoning += ` with direct statement cashback credits and minimal annual fees.`;
+        } else {
+          reasoning += ` with transfer partners: ${card.transferPartners.join(", ") || "Direct cashback"}.`;
+        }
 
         return {
           cardId: card.id,
@@ -834,8 +1014,7 @@ export class RewardPathAIModel {
   }
 
   static runMatchmaker(query: string, spend?: SpendProfile) {
-    void spend;
-    const nexusRes = this.runNexusEngine(query);
+    const nexusRes = this.runNexusEngine(query, [], spend);
     return {
       query,
       recommendations: nexusRes.recommendations,
@@ -854,11 +1033,84 @@ export class RewardPathAIModel {
       return baseResponse;
     }
 
-    const context = baseResponse.recommendations
+    // Preserve deterministic safety guardrails for adversarial / edge cases and clarification requests
+    if (baseResponse.isAdversarialOrEdgeCase || baseResponse.clarifyingQuestion) {
+      return baseResponse;
+    }
+
+    // Build rich, intent-specific context envelope for LLM
+    const topRecs = baseResponse.recommendations
       .map(
-        (r) => `${r.cardName}: NAV ₹${r.netAnnualValue}, fee ₹${r.annualFee}, rewards ₹${r.annualRewards}.`
+        (r) =>
+          `${r.rank ? `#${r.rank} ` : ""}${r.cardName}: NAV ₹${r.netAnnualValue.toLocaleString()}, Annual Fee ₹${r.annualFee.toLocaleString()}, Rewards ₹${r.annualRewards.toLocaleString()}. Key Value: ${r.reasoning}`
       )
       .join("\n");
+
+    const retrievedContext = baseResponse.citations
+      ?.slice(0, 4)
+      .map((c) => `- ${c.excerpt}`)
+      .join("\n");
+
+    let intentContext = `Detected Intent: ${baseResponse.intentType}\n`;
+
+    if (baseResponse.tripPlanner) {
+      intentContext += `Trip Destination: ${baseResponse.tripPlanner.destination}
+Flights: ${baseResponse.tripPlanner.flightsStrategy.cardName} (${baseResponse.tripPlanner.flightsStrategy.multiplierText}) - ${baseResponse.tripPlanner.flightsStrategy.instruction}
+Hotels: ${baseResponse.tripPlanner.hotelsStrategy.cardName} (${baseResponse.tripPlanner.hotelsStrategy.transferRatio}) - ${baseResponse.tripPlanner.hotelsStrategy.instruction}
+Cabs: ${baseResponse.tripPlanner.cabsStrategy.cardName} - ${baseResponse.tripPlanner.cabsStrategy.instruction}
+Forex & Shopping: ${baseResponse.tripPlanner.shoppingForexStrategy.cardName} (${baseResponse.tripPlanner.shoppingForexStrategy.forexMarkup}% markup) - ${baseResponse.tripPlanner.shoppingForexStrategy.instruction}
+Lounge: ${baseResponse.tripPlanner.loungeAndPerksAdvice || "Complimentary lounge access"}
+Est. Savings: ${baseResponse.tripPlanner.recommendedTotalSavingsEstimate || "High"}`;
+    } else if (baseResponse.creditRiskAnalysis) {
+      intentContext += `CIBIL Score Band: ${baseResponse.creditRiskAnalysis.cibilScoreBand}
+Approval Odds: ${baseResponse.creditRiskAnalysis.approvalOddsPercentage}% (${baseResponse.creditRiskAnalysis.approvalOddsVerdict})
+DTI Assessment: ${baseResponse.creditRiskAnalysis.dtiAssessment}
+Inquiry Velocity: ${baseResponse.creditRiskAnalysis.inquiryVelocityRisk}
+Underwriting Rules: ${baseResponse.creditRiskAnalysis.issuerRulesNotes}
+Key Mitigation Steps: ${baseResponse.creditRiskAnalysis.mitigationPlaybook.slice(0, 2).join("; ")}`;
+    } else if (baseResponse.purchaseProfitability) {
+      intentContext += `Item: ${baseResponse.purchaseProfitability.itemType}
+Verdict: ${baseResponse.purchaseProfitability.verdictTitle} (${baseResponse.purchaseProfitability.netProfitOrLoss})
+Rewards: ${baseResponse.purchaseProfitability.rewardsValueEstimate}
+Merchant Surcharge: ${baseResponse.purchaseProfitability.merchantSurchargeEstimate}
+Verdict Rationale: ${baseResponse.purchaseProfitability.reasoning}`;
+    } else if (baseResponse.redemptionGuide) {
+      intentContext += `Program: ${baseResponse.redemptionGuide.programName}
+Est. Rupee Value: ${baseResponse.redemptionGuide.totalRupeeValueEstimate}
+Where to Redeem: ${baseResponse.redemptionGuide.whereToUsePoints}
+Transfer Ratio: ${baseResponse.redemptionGuide.transferRatio}
+Steps: ${baseResponse.redemptionGuide.stepByStepProcess.slice(0, 2).join("; ")}`;
+    } else if (baseResponse.purchaseStrategy) {
+      intentContext += `Item: ${baseResponse.purchaseStrategy.targetItem}
+Top Card: ${baseResponse.purchaseStrategy.recommendedCard} (${baseResponse.purchaseStrategy.multiplierOrCashback})
+Steps: ${baseResponse.purchaseStrategy.stepByStepProcess.join("; ")}`;
+    } else if (baseResponse.multiIntentSubResponses && baseResponse.multiIntentSubResponses.length > 0) {
+      intentContext += `Multi-Intent Breakdown: ${baseResponse.multiIntentSubResponses.map((s) => `${s.title}: ${s.details.join(", ")}`).join(" | ")}`;
+    }
+
+    const promptText = `You are RewardPath Command Center AI, an elite credit card rewards & financial strategist in India.
+Synthesize a sharp, authoritative, and personalized recommendation summary (2 to 4 sentences) addressing the user's specific query.
+
+Instructions:
+1. Directly answer the user's question using the verified context below.
+2. If this is a travel/destination query, highlight the specific booking strategy, flight transfer partner, and forex/lounge advantage for that destination.
+3. If this is a CIBIL/approval odds query, highlight their specific score band, approval odds percentage, and the most accessible high-value card.
+4. If this is a purchase profitability check (e.g., car, electronics), state whether it is profitable after merchant surcharges and highlight net savings.
+5. If this is a points redemption query, explain the highest rupee-per-point redemption channel and transfer partner ratios.
+6. If this is a category search (e.g. dining, groceries, cashback, fuel, shopping), explain why the top recommended card wins for that exact spend category.
+7. Maintain exact numeric consistency with the verified context (NAV, fees, rewards, percentages). Never invent figures not in the context.
+8. Respond strictly in valid JSON format with a "summary" key: {"summary": "your synthesis"}.
+
+User Query: "${query}"
+
+Verified Context:
+${intentContext}
+
+Recommended Cards (ranked by Net Annual Value & Category Match):
+${topRecs || "None"}
+
+Verified Bank Guidelines & Knowledge Excerpts:
+${retrievedContext || "None"}`;
 
     // 1. Google Gemini integration
     if (geminiKey) {
@@ -873,7 +1125,7 @@ export class RewardPathAIModel {
                 {
                   parts: [
                     {
-                      text: `You are RewardPath Command Center AI. Summarize recommendation strategy maintaining exact numeric claims. Respond strictly in valid JSON with a "summary" key: {"summary": "your synthesis"}.\n\nQuery: "${query}"\n\nVerified Context:\n${context}`,
+                      text: promptText,
                     },
                   ],
                 },
@@ -883,6 +1135,7 @@ export class RewardPathAIModel {
                 temperature: 0.2,
               },
             }),
+            signal: AbortSignal.timeout(8000),
           }
         );
 
@@ -914,11 +1167,11 @@ export class RewardPathAIModel {
           messages: [
             {
               role: "system",
-              content: `You are RewardPath Command Center AI. Summarize recommendation strategy maintaining exact numeric claims.`,
+              content: `You are RewardPath Command Center AI. Synthesize recommendation maintaining exact numeric claims. Respond strictly in JSON: {"summary": "your synthesis"}.`,
             },
             {
               role: "user",
-              content: `Query: "${query}"\n\nVerified Context:\n${context}`,
+              content: promptText,
             },
           ],
           temperature: 0.2,

@@ -41,7 +41,8 @@ export async function runMatchmaker(query: string): Promise<MatchmakerResponse> 
 }
 
 export async function runMatchmakerWithLLM(query: string): Promise<MatchmakerResponse> {
-  const baseResponse = RewardPathAIModel.runNexusEngine(query);
+  const spend = inferSpendFromQuery(query);
+  const baseResponse = RewardPathAIModel.runNexusEngine(query, [], spend);
   const synthesized = await RewardPathAIModel.synthesizeWithLLM(query, baseResponse);
   return {
     query,
